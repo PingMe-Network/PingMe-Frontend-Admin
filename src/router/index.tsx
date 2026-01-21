@@ -1,0 +1,145 @@
+import { lazy } from "react";
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import { AdminRoute } from "@/pages/commons/AdminRoute";
+import { LazyElement } from "@/components/custom/LazyElement";
+
+// ===========================================================
+// PUBLIC PAGES
+// ===========================================================
+const RootPageLayout = lazy(() => import("@/pages/public-routes-page"));
+const AuthPage = lazy(() => import("@/pages/public-routes-page/auth-page"));
+
+// ===========================================================
+// ADMIN PAGES
+// ===========================================================
+const AdminPage = lazy(() => import("@/pages/admin-route-pages"));
+const AccountManagementPage = lazy(
+  () => import("@/pages/admin-route-pages/account-management-page"),
+);
+const BlogManagementPage = lazy(
+  () => import("@/pages/admin-route-pages/blog-management-page"),
+);
+const StatisticsManagementPage = lazy(
+  () => import("@/pages/admin-route-pages/statistics-management-page"),
+);
+const MusicManagementPage = lazy(
+  () => import("@/pages/admin-route-pages/music-management-page"),
+);
+const AlbumManagementPage = lazy(
+  () => import("@/pages/admin-route-pages/album-management-page"),
+);
+const ArtistManagementPage = lazy(
+  () => import("@/pages/admin-route-pages/artist-management-page"),
+);
+const GenreManagementPage = lazy(
+  () => import("@/pages/admin-route-pages/genre-management-page"),
+);
+const ReelManagementPage = lazy(
+  () => import("@/pages/admin-route-pages/reel-management-page"),
+);
+
+export const router = createBrowserRouter([
+  // ===========================================================
+  // PUBLIC ROUTES
+  // ===========================================================
+  {
+    path: "/",
+    element: (
+      <LazyElement>
+        <RootPageLayout />
+      </LazyElement>
+    ),
+    children: [
+      { index: true, element: <Navigate to="/auth" /> },
+      {
+        path: "auth",
+        element: (
+          <LazyElement>
+            <AuthPage />
+          </LazyElement>
+        ),
+      },
+    ],
+  },
+
+  // ===========================================================
+  // ADMIN ROUTES (Admin Only)
+  // ===========================================================
+  {
+    path: "admin",
+    element: (
+      <AdminRoute>
+        <LazyElement>
+          <AdminPage />
+        </LazyElement>
+      </AdminRoute>
+    ),
+    children: [
+      { index: true, element: <Navigate to="/admin/accounts" /> },
+      {
+        path: "accounts",
+        element: (
+          <LazyElement>
+            <AccountManagementPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "blogs",
+        element: (
+          <LazyElement>
+            <BlogManagementPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "statistics",
+        element: (
+          <LazyElement>
+            <StatisticsManagementPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "music",
+        element: (
+          <LazyElement>
+            <MusicManagementPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "albums",
+        element: (
+          <LazyElement>
+            <AlbumManagementPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "artists",
+        element: (
+          <LazyElement>
+            <ArtistManagementPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "genres",
+        element: (
+          <LazyElement>
+            <GenreManagementPage />
+          </LazyElement>
+        ),
+      },
+      {
+        path: "reels",
+        element: (
+          <LazyElement>
+            <ReelManagementPage />
+          </LazyElement>
+        ),
+      },
+    ],
+  },
+]);
