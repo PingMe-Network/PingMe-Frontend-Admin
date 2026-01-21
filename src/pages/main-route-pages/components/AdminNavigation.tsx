@@ -1,6 +1,4 @@
-"use client";
-
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   Users,
@@ -12,8 +10,8 @@ import {
   Tag,
   ChevronLeft,
   ChevronRight,
-  Home,
   Video,
+  LogOut,
 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -22,6 +20,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { useAppDispatch, useAppSelector } from "@/features/hooks";
+import { logout } from "@/features/slices/authThunk";
+import { UserAvatarFallback } from "@/components/custom/UserAvatarFallback";
 
 const navGroups = [
   {
@@ -93,20 +101,28 @@ const navGroups = [
 
 export default function AdminNavigation() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { userSession } = useAppSelector((state) => state.auth);
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/auth");
+  };
 
   return (
     <TooltipProvider>
       <div
         className={cn(
           "bg-white border-r border-gray-200 flex flex-col transition-all duration-300",
-          isCollapsed ? "w-16" : "w-64"
+          isCollapsed ? "w-16" : "w-64",
         )}
       >
         <div
           className={cn(
             "border-b border-gray-200 flex items-center transition-all duration-300",
-            isCollapsed ? "p-3 justify-center" : "p-6 justify-between"
+            isCollapsed ? "p-3 justify-center" : "p-6 justify-between",
           )}
         >
           {!isCollapsed && (
@@ -117,7 +133,7 @@ export default function AdminNavigation() {
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             className={cn(
-              "w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0 border border-gray-200"
+              "w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0 border border-gray-200",
             )}
             aria-label={isCollapsed ? "Mở sidebar" : "Đóng sidebar"}
           >
@@ -151,7 +167,7 @@ export default function AdminNavigation() {
                           isActive
                             ? "bg-purple-50 text-purple-600 font-medium"
                             : "text-gray-700 hover:bg-gray-50",
-                          isCollapsed && "justify-center px-2"
+                          isCollapsed && "justify-center px-2",
                         )}
                       >
                         <Icon className="w-5 h-5 flex-shrink-0" />
@@ -182,30 +198,51 @@ export default function AdminNavigation() {
           </div>
         </nav>
 
+        {/* User Menu */}
         <div className="p-4 border-t border-gray-200">
-          {isCollapsed ? (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  to="/home"
-                  className="flex items-center justify-center px-2 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors rounded-lg hover:bg-gray-50"
-                >
-                  <Home className="w-4 h-4" />
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>Quay lại trang chủ</p>
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <Link
-              to="/home"
-              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors rounded-lg hover:bg-gray-50 justify-center"
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className={cn(
+                  "flex items-center gap-3 w-full rounded-lg transition-colors hover:bg-gray-50 p-2",
+                  isCollapsed && "justify-center",
+                )}
+              >
+                <Avatar className="h-9 w-9 ring-2 ring-purple-100">
+                  <AvatarImage
+                    src={userSession?.avatarUrl || undefined}
+                    alt={userSession?.name || "Admin"}
+                  />
+                  <UserAvatarFallback name={userSession?.name} size="sm" />
+                </Avatar>
+                {!isCollapsed && (
+                  <div className="flex-1 text-left min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      {userSession?.name || "Admin"}
+                    </p>
+                    <p className="text-xs text-gray-500 truncate">
+                      {userSession?.email || "admin@pingme.com"}
+                    </p>
+                  </div>
+                )}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align={isCollapsed ? "center" : "start"}
+              side="top"
+              className="w-56 mb-2"
             >
-              <Home className="w-4 h-4" />
-              <span>Quay lại trang chủ</span>
-            </Link>
-          )}
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="flex items-center gap-3 text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-100">
+                  <LogOut className="h-4 w-4 text-red-600" />
+                </div>
+                <span className="font-medium">Đăng xuất</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </TooltipProvider>
