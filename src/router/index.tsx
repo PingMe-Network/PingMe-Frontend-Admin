@@ -11,30 +11,30 @@ const AuthPage = lazy(() => import("@/pages/auth-page"));
 // ===========================================================
 // ADMIN PAGES
 // ===========================================================
-const AdminPage = lazy(() => import("@/pages/admin-route-pages"));
+const AdminPage = lazy(() => import("@/pages/main-route-pages"));
 const AccountManagementPage = lazy(
-  () => import("@/pages/admin-route-pages/account-management-page"),
+  () => import("@/pages/main-route-pages/account-page"),
 );
 const BlogManagementPage = lazy(
-  () => import("@/pages/admin-route-pages/blog-management-page"),
+  () => import("@/pages/main-route-pages/blog-page"),
 );
 const StatisticsManagementPage = lazy(
-  () => import("@/pages/admin-route-pages/statistics-management-page"),
+  () => import("@/pages/main-route-pages/statistic-page"),
 );
 const MusicManagementPage = lazy(
-  () => import("@/pages/admin-route-pages/music-management-page"),
+  () => import("@/pages/main-route-pages/music-page"),
 );
 const AlbumManagementPage = lazy(
-  () => import("@/pages/admin-route-pages/album-management-page"),
+  () => import("@/pages/main-route-pages/album-page"),
 );
 const ArtistManagementPage = lazy(
-  () => import("@/pages/admin-route-pages/artist-management-page"),
+  () => import("@/pages/main-route-pages/artist-page"),
 );
 const GenreManagementPage = lazy(
-  () => import("@/pages/admin-route-pages/genre-management-page"),
+  () => import("@/pages/main-route-pages/genre-page"),
 );
 const ReelManagementPage = lazy(
-  () => import("@/pages/admin-route-pages/reel-management-page"),
+  () => import("@/pages/main-route-pages/reel-page"),
 );
 
 export const router = createBrowserRouter([
