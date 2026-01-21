@@ -4,10 +4,9 @@ import { AdminRoute } from "@/pages/commons/AdminRoute";
 import { LazyElement } from "@/components/custom/LazyElement";
 
 // ===========================================================
-// PUBLIC PAGES
+// AUTH PAGE
 // ===========================================================
-const RootPageLayout = lazy(() => import("@/pages/public-routes-page"));
-const AuthPage = lazy(() => import("@/pages/public-routes-page/auth-page"));
+const AuthPage = lazy(() => import("@/pages/auth-page"));
 
 // ===========================================================
 // ADMIN PAGES
@@ -40,26 +39,19 @@ const ReelManagementPage = lazy(
 
 export const router = createBrowserRouter([
   // ===========================================================
-  // PUBLIC ROUTES
+  // AUTH ROUTE
   // ===========================================================
   {
     path: "/",
+    element: <Navigate to="/auth" replace />,
+  },
+  {
+    path: "/auth",
     element: (
       <LazyElement>
-        <RootPageLayout />
+        <AuthPage />
       </LazyElement>
     ),
-    children: [
-      { index: true, element: <Navigate to="/auth" /> },
-      {
-        path: "auth",
-        element: (
-          <LazyElement>
-            <AuthPage />
-          </LazyElement>
-        ),
-      },
-    ],
   },
 
   // ===========================================================
