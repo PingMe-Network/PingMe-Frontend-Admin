@@ -8,10 +8,10 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Eye, Edit } from "lucide-react"; // Import thêm icon Edit
+import { Eye, Edit } from "lucide-react";
 import { getUserInitials } from "@/utils/authFieldHandler";
 import type { UserSummaryResponse } from "@/types/common/userSummary";
-import { UserStatusBadge } from "./UserStatusBadge"; // Import component Badge
+import { UserStatusBadge } from "./UserStatusBadge";
 
 interface AccountManagementTableProps {
   users: UserSummaryResponse[];
