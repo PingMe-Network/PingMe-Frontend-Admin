@@ -18,7 +18,7 @@ export function SearchBar({
     filters,
     actions,
     className = "",
-}: SearchBarProps) {
+}: Readonly<SearchBarProps>) {
     return (
         <div className={`p-8 ${className}`}>
             <div className="flex items-center gap-4">

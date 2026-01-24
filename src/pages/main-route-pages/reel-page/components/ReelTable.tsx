@@ -29,7 +29,20 @@ export function ReelTable({
     onHide,
     onUnhide,
     onDelete,
-}: ReelTableProps) {
+}: Readonly<ReelTableProps>) {
+    // Helper functions to avoid nested ternary
+    const getStatusClassName = (status: string): string => {
+        if (status === "ACTIVE") return "bg-green-100 text-green-800";
+        if (status === "HIDDEN") return "bg-red-100 text-red-800";
+        return "bg-gray-100 text-gray-800";
+    };
+
+    const getStatusLabel = (status: string): string => {
+        if (status === "ACTIVE") return "Chấp nhận";
+        if (status === "HIDDEN") return "Từ chối";
+        return status;
+    };
+
     if (!reels || reels.length === 0) {
         return (
             <EmptyState
@@ -66,9 +79,11 @@ export function ReelTable({
                                     onClick={() => onPreviewVideo(reel.videoUrl)}
                                     className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100 hover:ring-2 hover:ring-blue-500 transition-all group"
                                 >
+                                    {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
                                     <video
                                         src={reel.videoUrl}
                                         className="w-full h-full object-cover"
+                                        muted
                                     />
                                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                         <Play className="w-6 h-6 text-white" />
@@ -125,18 +140,9 @@ export function ReelTable({
                             <TableCell>
                                 {reel.status ? (
                                     <span
-                                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${reel.status === "ACTIVE"
-                                            ? "bg-green-100 text-green-800"
-                                            : reel.status === "HIDDEN"
-                                                ? "bg-red-100 text-red-800"
-                                                : "bg-gray-100 text-gray-800"
-                                            }`}
+                                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClassName(reel.status)}`}
                                     >
-                                        {reel.status === "ACTIVE"
-                                            ? "Chấp nhận"
-                                            : reel.status === "HIDDEN"
-                                                ? "Từ chối"
-                                                : reel.status}
+                                        {getStatusLabel(reel.status)}
                                     </span>
                                 ) : (
                                     <span className="text-xs text-gray-400">Chưa xác định</span>

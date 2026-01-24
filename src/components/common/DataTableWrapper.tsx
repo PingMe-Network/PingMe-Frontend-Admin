@@ -15,7 +15,7 @@ export function DataTableWrapper({
     emptyMessage = "Không tìm thấy kết quả nào.",
     children,
     className = "",
-}: DataTableWrapperProps) {
+}: Readonly<DataTableWrapperProps>) {
     if (isLoading) {
         return (
             <div className={`flex justify-center py-10 ${className}`}>
