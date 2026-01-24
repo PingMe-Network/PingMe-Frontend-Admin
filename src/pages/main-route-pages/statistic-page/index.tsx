@@ -1,4 +1,3 @@
-import { PageHeader } from "../components/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, FileText, CheckCircle, TrendingUp } from "lucide-react";
 
@@ -40,10 +39,7 @@ const stats = [
 export default function StatisticsManagementPage() {
   return (
     <div className="flex-1 overflow-auto">
-      <PageHeader
-        title="Thống kê"
-        description="Tổng quan về hoạt động của hệ thống"
-      />
+      
 
       {/* Content */}
       <div className="p-8">

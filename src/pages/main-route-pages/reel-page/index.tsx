@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react"
-import { PageHeader } from "../components/PageHeader"
 import { SearchBar } from "@/components/common/SearchBar"
 import { DataTableWrapper } from "@/components/common/DataTableWrapper"
 import Pagination from "@/components/custom/Pagination"
@@ -158,10 +157,7 @@ export default function ReelManagementPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      <PageHeader
-        title="Quản Lý Reels"
-        description="Quản lý và kiểm duyệt nội dung video reels"
-      />
+      
 
       <SearchBar
         value={captionFilter}

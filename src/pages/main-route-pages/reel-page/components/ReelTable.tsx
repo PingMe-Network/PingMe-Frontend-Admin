@@ -57,15 +57,15 @@ export function ReelTable({
         <div className="bg-white rounded-lg shadow overflow-hidden">
             <Table className="w-full">
                 <TableHeader>
-                    <TableRow className="bg-gradient-to-r from-blue-100 to-cyan-100 hover:from-blue-100 hover:to-cyan-100">
-                        <TableHead>ID</TableHead>
-                        <TableHead>Video</TableHead>
-                        <TableHead>Caption</TableHead>
-                        <TableHead>Người đăng</TableHead>
-                        <TableHead>Thống kê</TableHead>
-                        <TableHead>Trạng thái</TableHead>
-                        <TableHead>Ngày tạo</TableHead>
-                        <TableHead>Hành động</TableHead>
+                    <TableRow className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600">
+                        <TableHead className="text-white font-semibold">ID</TableHead>
+                        <TableHead className="text-white font-semibold">Video</TableHead>
+                        <TableHead className="text-white font-semibold">Caption</TableHead>
+                        <TableHead className="text-white font-semibold">Người đăng</TableHead>
+                        <TableHead className="text-white font-semibold">Thống kê</TableHead>
+                        <TableHead className="text-white font-semibold">Trạng thái</TableHead>
+                        <TableHead className="text-white font-semibold">Ngày tạo</TableHead>
+                        <TableHead className="text-white font-semibold">Hành động</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>

@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { PageHeader } from "../components/PageHeader";
 import { BlogManagementTable } from "./components/BlogManagementTable";
 import Pagination from "@/components/custom/Pagination";
 import { DataTableWrapper } from "@/components/common/DataTableWrapper";
@@ -111,10 +110,7 @@ export default function BlogManagementPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      <PageHeader
-        title="Quản lý blog"
-        description="Duyệt và quản lý các bài viết blog"
-      />
+      
 
       <SearchBar
         value={searchQuery}

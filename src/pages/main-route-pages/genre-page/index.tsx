@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { PageHeader } from "../components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { GenreTable } from "./components/GenreTable";
@@ -94,10 +93,7 @@ export default function GenreManagementPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      <PageHeader
-        title="Quản lý Thể loại"
-        description="Quản lý thể loại nhạc"
-      />
+      
 
       <SearchBar
         value={searchQuery}

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { PageHeader } from "../components/PageHeader";
 import { SearchBar } from "@/components/common/SearchBar";
 import { DataTableWrapper } from "@/components/common/DataTableWrapper";
 import Pagination from "@/components/custom/Pagination";
@@ -154,10 +153,7 @@ export default function AccountManagementPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      <PageHeader
-        title="Quản lý tài khoản"
-        description={`Quản lý ${totalElements} người dùng và trạng thái tài khoản`}
-      />
+      
 
       <SearchBar
         value={searchQuery}

@@ -61,7 +61,7 @@ export function DataTable<T extends { id: number | string }>({
                 {columns.map((column) => (
                   <th
                     key={column.key}
-                    className={`px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider ${column.className || ""
+                    className={`px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider ${column.className || ""
                       }`}
                   >
                     {column.header}

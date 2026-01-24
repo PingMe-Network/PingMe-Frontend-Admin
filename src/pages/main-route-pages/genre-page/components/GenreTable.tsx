@@ -33,9 +33,9 @@ export function GenreTable({ genres, onEdit, onDelete }: Readonly<GenreTableProp
     <div className="bg-white rounded-lg shadow overflow-hidden">
       <Table className="w-full">
         <TableHeader>
-          <TableRow className="bg-gradient-to-r from-blue-100 to-cyan-100 hover:from-blue-100 hover:to-cyan-100">
-            <TableHead>Tên thể loại</TableHead>
-            <TableHead>Hành động</TableHead>
+          <TableRow className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600">
+            <TableHead className="text-white font-semibold">Tên thể loại</TableHead>
+            <TableHead className="text-white font-semibold">Hành động</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

@@ -33,11 +33,11 @@ export function AlbumTable({ albums, onEdit, onDelete }: Readonly<AlbumTableProp
     <div className="bg-white rounded-lg shadow overflow-hidden">
       <Table className="w-full">
         <TableHeader>
-          <TableRow className="bg-gradient-to-r from-blue-100 to-cyan-100 hover:from-blue-100 hover:to-cyan-100">
-            <TableHead>Ảnh</TableHead>
-            <TableHead>Tên album</TableHead>
-            <TableHead>Lượt nghe</TableHead>
-            <TableHead>Hành động</TableHead>
+          <TableRow className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600">
+            <TableHead className="text-white font-semibold">Ảnh</TableHead>
+            <TableHead className="text-white font-semibold">Tên album</TableHead>
+            <TableHead className="text-white font-semibold">Lượt nghe</TableHead>
+            <TableHead className="text-white font-semibold">Hành động</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
