@@ -13,7 +13,7 @@ interface UsePaginationReturn {
 }
 
 export const usePagination = (
-  initialItemsPerPage = 20,
+  initialItemsPerPage = 5,
 ): UsePaginationReturn => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage);

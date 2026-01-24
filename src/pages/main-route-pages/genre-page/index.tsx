@@ -27,7 +27,7 @@ export default function GenreManagementPage() {
     setItemsPerPage,
     setTotalElements,
     setTotalPages,
-  } = usePagination(6);
+  } = usePagination();
 
   const fetchGenres = async () => {
     try {
