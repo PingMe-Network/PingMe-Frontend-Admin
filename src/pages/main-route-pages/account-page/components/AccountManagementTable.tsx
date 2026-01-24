@@ -28,7 +28,7 @@ export const AccountManagementTable = ({
     <div className="rounded-lg border border-purple-100 overflow-hidden bg-white shadow-sm">
       <Table>
         <TableHeader>
-          <TableRow className="bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-50 hover:to-pink-50">
+          <TableRow className="bg-linear-to-r from-purple-50 to-pink-50 hover:from-purple-50 hover:to-pink-50">
             <TableHead className="font-semibold text-purple-900">
               Người dùng
             </TableHead>

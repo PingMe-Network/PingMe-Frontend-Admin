@@ -56,14 +56,13 @@ export function DataTable<T extends { id: number | string }>({
       <div className="bg-white rounded-lg border border-purple-100 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gradient-to-r from-purple-50 to-pink-50 border-b border-purple-100">
+            <thead className="bg-linear-to-r from-purple-50 to-pink-50 border-b border-purple-100">
               <tr>
                 {columns.map((column) => (
                   <th
                     key={column.key}
-                    className={`px-6 py-4 text-left text-xs font-semibold text-purple-900 uppercase tracking-wider ${
-                      column.className || ""
-                    }`}
+                    className={`px-6 py-4 text-left text-xs font-semibold text-purple-900 uppercase tracking-wider ${column.className || ""
+                      }`}
                   >
                     {column.header}
                   </th>
@@ -84,7 +83,7 @@ export function DataTable<T extends { id: number | string }>({
                 filteredData.map((item) => (
                   <tr
                     key={item.id}
-                    className="hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-pink-50/50 transition-colors"
+                    className="hover:bg-linear-to-r hover:from-purple-50/50 hover:to-pink-50/50 transition-colors"
                   >
                     {columns.map((column) => (
                       <td
