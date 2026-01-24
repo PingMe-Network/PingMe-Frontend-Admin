@@ -33,11 +33,11 @@ export function ArtistTable({ artists, onEdit, onDelete }: Readonly<ArtistTableP
     <div className="bg-white rounded-lg shadow overflow-hidden">
       <Table className="w-full">
         <TableHeader>
-          <TableRow className="bg-gradient-to-r from-blue-100 to-cyan-100 hover:from-blue-100 hover:to-cyan-100">
-            <TableHead>Ảnh</TableHead>
-            <TableHead>Tên nghệ sĩ</TableHead>
-            <TableHead>Tiểu sử</TableHead>
-            <TableHead>Hành động</TableHead>
+          <TableRow className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600">
+            <TableHead className="text-white font-semibold">Ảnh</TableHead>
+            <TableHead className="text-white font-semibold">Tên nghệ sĩ</TableHead>
+            <TableHead className="text-white font-semibold">Tiểu sử</TableHead>
+            <TableHead className="text-white font-semibold">Hành động</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

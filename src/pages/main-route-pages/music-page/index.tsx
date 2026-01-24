@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { PageHeader } from "../components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { SongTable } from "./components/SongTable";
@@ -98,10 +97,7 @@ export default function MusicManagementPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      <PageHeader
-        title="Quản lý nhạc"
-        description="Quản lý bài hát, nghệ sĩ, album và thể loại"
-      />
+      
 
       <SearchBar
         value={searchQuery}

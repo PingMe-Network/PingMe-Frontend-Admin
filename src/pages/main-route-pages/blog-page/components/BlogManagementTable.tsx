@@ -35,30 +35,30 @@ export const BlogManagementTable = ({
     <div className="rounded-lg border border-blue-100 overflow-hidden bg-white shadow-sm">
       <Table className="w-full">
         <TableHeader>
-          <TableRow className="bg-gradient-to-r from-blue-100 to-cyan-100 hover:from-blue-100 hover:to-cyan-100">
-            <TableHead className="font-semibold text-blue-900">
+          <TableRow className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600">
+            <TableHead className="font-semibold text-white">
               Tiêu đề
             </TableHead>
-            <TableHead className="font-semibold text-blue-900">
+            <TableHead className="font-semibold text-white">
               Danh mục
             </TableHead>
-            <TableHead className="font-semibold text-blue-900">
+            <TableHead className="font-semibold text-white">
               Tác giả
             </TableHead>
-            <TableHead className="font-semibold text-blue-900">
+            <TableHead className="font-semibold text-white">
               Trạng thái
             </TableHead>
-            <TableHead className="font-semibold text-blue-900">
+            <TableHead className="font-semibold text-white">
               Ngày tạo
             </TableHead>
-            <TableHead className="font-semibold text-blue-900">
+            <TableHead className="font-semibold text-white">
               Hành động
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {blogs.length === 0 ? (
-            <TableRow className="bg-gradient-to-r from-blue-100 to-cyan-100 hover:from-blue-100 hover:to-cyan-100">
+            <TableRow className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600">
               <TableCell
                 colSpan={6}
                 className="text-center py-8 text-muted-foreground"

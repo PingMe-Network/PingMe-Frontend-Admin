@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import LoadingSpinner from "@/components/custom/LoadingSpinner";
+import { TableSkeleton } from "@/components/custom/TableSkeleton";
 
 interface DataTableWrapperProps {
     isLoading: boolean;
@@ -18,8 +18,8 @@ export function DataTableWrapper({
 }: Readonly<DataTableWrapperProps>) {
     if (isLoading) {
         return (
-            <div className={`flex justify-center py-10 ${className}`}>
-                <LoadingSpinner />
+            <div className={`w-full ${className}`}>
+                <TableSkeleton rowCount={7} />
             </div>
         );
     }

@@ -3,9 +3,9 @@ export const HEADER_HEIGHT = 75; // pixels
 
 // Table styles
 export const TABLE_HEADER_GRADIENT = 
-  "bg-gradient-to-r from-blue-100 to-cyan-100 hover:from-blue-100 hover:to-cyan-100";
+  "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600";
 
-export const TABLE_HEADER_TEXT = "font-semibold text-blue-900";
+export const TABLE_HEADER_TEXT = "font-semibold text-white";
 
 export const TABLE_ROW_HOVER = "hover:bg-blue-50/50 transition-colors";
 

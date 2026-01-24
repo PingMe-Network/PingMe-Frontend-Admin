@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { PageHeader } from "../components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { ArtistTable } from "./components/ArtistTable";
@@ -97,10 +96,7 @@ export default function ArtistManagementPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      <PageHeader
-        title="Quản lý Nghệ sĩ"
-        description="Quản lý thông tin nghệ sĩ"
-      />
+      
 
       <SearchBar
         value={searchQuery}
