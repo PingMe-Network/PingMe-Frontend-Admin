@@ -29,7 +29,7 @@ export default function ArtistManagementPage() {
     setItemsPerPage,
     setTotalElements,
     setTotalPages,
-  } = usePagination(6);
+  } = usePagination();
 
   const fetchArtists = async () => {
     try {

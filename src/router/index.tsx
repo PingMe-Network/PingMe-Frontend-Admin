@@ -67,7 +67,7 @@ export const router = createBrowserRouter([
       </AdminRoute>
     ),
     children: [
-      { index: true, element: <Navigate to="/admin/accounts" /> },
+      { index: true, element: <Navigate to="/admin/statistics" replace /> },
       {
         path: "accounts",
         element: (

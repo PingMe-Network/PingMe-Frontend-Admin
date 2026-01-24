@@ -28,7 +28,7 @@ export default function MusicManagementPage() {
     setItemsPerPage,
     setTotalElements,
     setTotalPages,
-  } = usePagination(6);
+  } = usePagination();
 
   const fetchSongs = async () => {
     try {

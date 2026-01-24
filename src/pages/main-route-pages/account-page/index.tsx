@@ -33,7 +33,7 @@ export default function AccountManagementPage() {
     setItemsPerPage,
     setTotalElements,
     setTotalPages,
-  } = usePagination(7);
+  } = usePagination();
 
   const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserSummaryResponse | null>(null);

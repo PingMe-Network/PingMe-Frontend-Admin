@@ -30,7 +30,7 @@ export default function BlogManagementPage() {
     setTotalElements,
     setTotalPages,
     resetPagination,
-  } = usePagination(10);
+  } = usePagination();
 
   const fetchBlogs = useCallback(async () => {
     setIsLoading(true);

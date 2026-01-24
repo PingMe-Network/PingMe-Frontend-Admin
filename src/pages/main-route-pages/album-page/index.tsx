@@ -27,7 +27,7 @@ export default function AlbumManagementPage() {
     setItemsPerPage,
     setTotalElements,
     setTotalPages,
-  } = usePagination(6);
+  } = usePagination();
 
   const fetchAlbums = async () => {
     try {
