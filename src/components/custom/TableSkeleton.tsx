@@ -1,10 +1,15 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMemo } from "react";
 
 interface TableSkeletonProps {
     rowCount?: number;
 }
 
-export function TableSkeleton({ rowCount = 7 }: TableSkeletonProps) {
+export function TableSkeleton({ rowCount = 7 }: Readonly<TableSkeletonProps>) {
+    const skeletonIds = useMemo(() =>
+        Array.from({ length: rowCount }).map(() => crypto.randomUUID()),
+        [rowCount]);
+
     return (
         <div className="w-full">
             {/* Table Header Skeleton */}
@@ -17,8 +22,8 @@ export function TableSkeleton({ rowCount = 7 }: TableSkeletonProps) {
 
             {/* Table Rows Skeleton */}
             <div className="space-y-4 px-4 mt-4">
-                {Array.from({ length: rowCount }).map((_, i) => (
-                    <div key={i} className="flex items-center gap-4 py-2">
+                {skeletonIds.map((id) => (
+                    <div key={id} className="flex items-center gap-4 py-2">
                         <Skeleton className="h-10 w-10 rounded-full flex-shrink-0" />
                         <div className="space-y-2 w-full">
                             <Skeleton className="h-4 w-[30%]" />
