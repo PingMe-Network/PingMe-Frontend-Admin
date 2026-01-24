@@ -25,29 +25,29 @@ export const AccountManagementTable = ({
   onEditStatus,
 }: AccountManagementTableProps) => {
   return (
-    <div className="rounded-lg border border-purple-100 overflow-hidden bg-white shadow-sm">
-      <Table>
+    <div className="rounded-lg border border-blue-100 overflow-hidden bg-white shadow-sm">
+      <Table className="w-full">
         <TableHeader>
-          <TableRow className="bg-linear-to-r from-purple-50 to-pink-50 hover:from-purple-50 hover:to-pink-50">
-            <TableHead className="font-semibold text-purple-900">
+          <TableRow className="bg-gradient-to-r from-blue-100 to-cyan-100 hover:from-blue-100 hover:to-cyan-100">
+            <TableHead className="font-semibold text-blue-900">
               Người dùng
             </TableHead>
-            <TableHead className="font-semibold text-purple-900">
+            <TableHead className="font-semibold text-blue-900">
               Email
             </TableHead>
-            <TableHead className="font-semibold text-purple-900">
+            <TableHead className="font-semibold text-blue-900">
               Trạng thái
             </TableHead>
-            <TableHead className="font-semibold text-purple-900 text-right">
+            <TableHead className="font-semibold text-blue-900">
               Hành động
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {users.length === 0 ? (
-            <TableRow>
+            <TableRow className="bg-gradient-to-r from-blue-100 to-cyan-100 hover:from-blue-100 hover:to-cyan-100">
               <TableCell
-                colSpan={4} // Đổi thành 4 vì đã thêm cột Trạng thái
+                colSpan={4}
                 className="text-center py-8 text-muted-foreground"
               >
                 Không có người dùng nào
@@ -57,7 +57,7 @@ export const AccountManagementTable = ({
             users.map((user) => (
               <TableRow
                 key={user.id}
-                className="hover:bg-purple-50/50 transition-colors"
+                className="hover:bg-blue-50/50 transition-colors"
               >
                 <TableCell>
                   <div className="flex items-center gap-3">
@@ -67,37 +67,34 @@ export const AccountManagementTable = ({
                         {getUserInitials(user.name)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="font-medium">{user.name}</span>
+                    <span className="font-medium truncate">{user.name}</span>
                   </div>
                 </TableCell>
-                <TableCell className="text-muted-foreground">
+                <TableCell className="text-muted-foreground truncate">
                   {user.email}
                 </TableCell>
 
-                {/* Cột hiển thị Badge trạng thái */}
                 <TableCell>
                   <UserStatusBadge status={user.accountStatus} />
                 </TableCell>
 
                 <TableCell>
-                  <div className="flex items-center justify-end gap-2">
-                    {/* Nút Xem chi tiết */}
+                  <div className="flex items-center gap-2">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => onViewDetails(user.id)}
-                      className="h-8 w-8 p-0 hover:bg-purple-100 hover:text-purple-700"
+                      className="h-8 w-8 p-0 hover:bg-blue-500 hover:text-white font-medium"
                       title="Xem chi tiết"
                     >
                       <Eye className="h-4 w-4" />
                     </Button>
 
-                    {/* Nút Chỉnh sửa trạng thái */}
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => onEditStatus(user)}
-                      className="h-8 w-8 p-0 hover:bg-blue-100 hover:text-blue-700"
+                      className="h-8 w-8 p-0 hover:bg-blue-500 hover:text-white font-medium"
                       title="Cập nhật trạng thái"
                     >
                       <Edit className="h-4 w-4" />

@@ -30,20 +30,20 @@ export function GenreTable({ genres, onEdit, onDelete }: Readonly<GenreTableProp
   }
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      <Table>
+    <div className="bg-white rounded-lg shadow overflow-hidden">
+      <Table className="w-full">
         <TableHeader>
-          <TableRow>
+          <TableRow className="bg-gradient-to-r from-blue-100 to-cyan-100 hover:from-blue-100 hover:to-cyan-100">
             <TableHead>Tên thể loại</TableHead>
-            <TableHead className="text-right">Thao tác</TableHead>
+            <TableHead>Hành động</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {genres.map((genre) => (
             <TableRow key={genre.id}>
-              <TableCell className="font-medium">{genre.name}</TableCell>
-              <TableCell className="text-right">
-                <div className="flex justify-end gap-2">
+              <TableCell className="font-medium truncate">{genre.name}</TableCell>
+              <TableCell>
+                <div className="flex gap-2">
                   <Button
                     variant="ghost"
                     size="icon"

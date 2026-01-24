@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { PageHeader } from "../components/PageHeader";
-import { AccountSearchFilters } from "./components/AccountSearchFilters";
+import { SearchBar } from "@/components/common/SearchBar";
+import { DataTableWrapper } from "@/components/common/DataTableWrapper";
+import Pagination from "@/components/custom/Pagination";
+import { usePagination } from "@/hooks/use-pagination";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AccountManagementTable } from "./components/AccountManagementTable";
 import type {
   AccountFilterType,
@@ -8,33 +12,32 @@ import type {
   UserSummaryResponse,
 } from "@/types/common/userSummary";
 import { toast } from "sonner";
-// Import hàm updateAccountStatus mới sửa
 import {
   getAllUsers,
   updateAccountStatus,
 } from "@/services/admin/userManagementApi.ts";
-import { Button } from "@/components/ui/button";
 import { UpdateStatusDialog } from "./components/UpdateStatusDialog";
 import { ConfirmDialog } from "@/components/custom/ConfirmDialog";
-
-const ITEMS_PER_PAGE = 7;
 
 export default function AccountManagementPage() {
   const [users, setUsers] = useState<UserSummaryResponse[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState<AccountFilterType>("ALL");
 
-  const [selectedStatus, setSelectedStatus] =
-    useState<AccountFilterType>("ALL");
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [totalElements, setTotalElements] = useState(0);
+  const {
+    currentPage,
+    itemsPerPage,
+    totalElements,
+    totalPages,
+    setCurrentPage,
+    setItemsPerPage,
+    setTotalElements,
+    setTotalPages,
+  } = usePagination(7);
 
   const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<UserSummaryResponse | null>(
-    null
-  );
+  const [selectedUser, setSelectedUser] = useState<UserSummaryResponse | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -44,7 +47,7 @@ export default function AccountManagementPage() {
       setIsLoading(true);
       const response = await getAllUsers({
         page: currentPage,
-        size: ITEMS_PER_PAGE,
+        size: itemsPerPage,
         filter: "name,desc",
         search: searchQuery,
         status: selectedStatus,
@@ -58,12 +61,15 @@ export default function AccountManagementPage() {
       } else {
         setUsers([]);
         setTotalPages(0);
+        setTotalElements(0);
         toast.error(response.data.errorMessage || "Lỗi tải dữ liệu");
       }
     } catch (error) {
       console.error(error);
       toast.error("Không thể kết nối đến server");
       setUsers([]);
+      setTotalPages(0);
+      setTotalElements(0);
     } finally {
       setIsLoading(false);
     }
@@ -75,7 +81,7 @@ export default function AccountManagementPage() {
     }, 300);
     return () => clearTimeout(timeoutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, searchQuery, selectedStatus]);
+  }, [currentPage, itemsPerPage, searchQuery, selectedStatus]);
 
   const handleSearchChange = (val: string) => {
     setSearchQuery(val);
@@ -153,70 +159,54 @@ export default function AccountManagementPage() {
         description={`Quản lý ${totalElements} người dùng và trạng thái tài khoản`}
       />
 
-      <AccountSearchFilters
-        searchQuery={searchQuery}
-        onSearchChange={handleSearchChange}
-        selectedStatus={selectedStatus}
-        onStatusChange={handleStatusChange}
+      <SearchBar
+        value={searchQuery}
+        onChange={handleSearchChange}
+        placeholder="Tìm kiếm theo tên hoặc email..."
+        actions={
+          <Select
+            value={selectedStatus}
+            onValueChange={(val) => handleStatusChange(val as AccountFilterType)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Trạng thái" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">Tất cả trạng thái</SelectItem>
+              <SelectItem value="ACTIVE">Hoạt động</SelectItem>
+              <SelectItem value="SUSPENDED">Tạm khóa</SelectItem>
+              <SelectItem value="DEACTIVATED">Bị khóa</SelectItem>
+            </SelectContent>
+          </Select>
+        }
       />
 
-      <div className="p-8">
-        {isLoading ? (
-          <div className="flex justify-center py-10">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-          </div>
-        ) : (
-          <>
-            <AccountManagementTable
-              users={users}
-              onViewDetails={(id) => console.log(id)}
-              onEditStatus={handleOpenUpdateStatus}
-            />
+      <div className="px-8 pb-8">
+        <DataTableWrapper
+          isLoading={isLoading}
+          isEmpty={users.length === 0}
+          emptyMessage="Không tìm thấy kết quả nào."
+        >
+          <AccountManagementTable
+            users={users}
+            onViewDetails={(id) => console.log(id)}
+            onEditStatus={handleOpenUpdateStatus}
+          />
 
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-2 mt-6">
-                <Button
-                  variant="outline"
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                >
-                  Trước
-                </Button>
-
-                <div className="flex gap-1">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                    (page) => (
-                      <Button
-                        key={page}
-                        variant={currentPage === page ? "default" : "outline"}
-                        onClick={() => setCurrentPage(page)}
-                        className={currentPage === page ? "bg-purple-600" : ""}
-                      >
-                        {page}
-                      </Button>
-                    )
-                  )}
-                </div>
-
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    setCurrentPage((p) => Math.min(totalPages, p + 1))
-                  }
-                  disabled={currentPage === totalPages}
-                >
-                  Sau
-                </Button>
-              </div>
-            )}
-          </>
-        )}
-
-        {!isLoading && users.length === 0 && (
-          <div className="text-center py-10 text-gray-500">
-            Không tìm thấy kết quả nào.
-          </div>
-        )}
+          {totalElements > 0 && totalPages > 0 && (
+            <div className="mt-6">
+              <Pagination
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                totalPages={totalPages}
+                totalElements={totalElements}
+                itemsPerPage={itemsPerPage}
+                setItemsPerPage={setItemsPerPage}
+                showItemsPerPageSelect={true}
+              />
+            </div>
+          )}
+        </DataTableWrapper>
       </div>
 
       <UpdateStatusDialog
