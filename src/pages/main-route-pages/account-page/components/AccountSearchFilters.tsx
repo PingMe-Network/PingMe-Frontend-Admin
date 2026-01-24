@@ -1,5 +1,3 @@
-"use client";
-
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -26,7 +24,7 @@ export const AccountSearchFilters = ({
   onStatusChange,
 }: AccountSearchFiltersProps) => {
   return (
-    <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-b border-purple-100">
+    <div className="bg-linear-to-r from-purple-50 to-pink-50 border-b border-purple-100">
       <div className="container mx-auto px-4 py-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">

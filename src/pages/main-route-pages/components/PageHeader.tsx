@@ -8,7 +8,7 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description, actions }: PageHeaderProps) {
   return (
-    <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-6 shadow-md">
+    <div className="bg-linear-to-r from-purple-600 to-pink-600 px-8 py-6 shadow-md">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">{title}</h1>
