@@ -1,30 +1,18 @@
-"use client"
-
 import { useState, useEffect, useCallback } from "react"
-import { Play, Eye, Heart, MessageCircle, Bookmark, Calendar, User, Search, Filter, Info, Trash2, EyeOff, CheckCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { PageHeader } from "../components/PageHeader"
+import { SearchBar } from "@/components/common/SearchBar"
+import { DataTableWrapper } from "@/components/common/DataTableWrapper"
+import Pagination from "@/components/custom/Pagination"
+import { ReelTable } from "./components/ReelTable"
 import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import { Filter } from "lucide-react"
 import { reelsApi } from "@/services/reels"
 import type { AdminReel } from "@/types/reels"
 import { toast } from "sonner"
-import LoadingSpinner from "@/components/custom/LoadingSpinner"
-import { formatDistanceToNow } from "date-fns"
-import { vi } from "date-fns/locale"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,9 +31,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import Pagination from "@/components/custom/Pagination"
 import ReelDetailModal from "./ReelDetailModal"
 
 export default function ReelManagementPage() {
@@ -71,11 +56,11 @@ export default function ReelManagementPage() {
   const [isHiding, setIsHiding] = useState(false)
 
   const fetchReels = useCallback(async (
-    page: number, 
-    size: number, 
-    caption?: string, 
-    userId?: number, 
-    minViews?: number, 
+    page: number,
+    size: number,
+    caption?: string,
+    userId?: number,
+    minViews?: number,
     maxViews?: number,
     from?: string,
     to?: string
@@ -99,47 +84,25 @@ export default function ReelManagementPage() {
     const userId = userIdFilter ? Number(userIdFilter) : undefined
     const minViews = minViewsFilter ? Number(minViewsFilter) : undefined
     const maxViews = maxViewsFilter ? Number(maxViewsFilter) : undefined
-    
-    // Convert date to ISO datetime string
     const from = fromDateFilter ? `${fromDateFilter}T00:00:00` : undefined
     const to = toDateFilter ? `${toDateFilter}T23:59:59` : undefined
-    
+
     fetchReels(currentPage, pageSize, captionFilter, userId, minViews, maxViews, from, to)
   }, [currentPage, pageSize, captionFilter, userIdFilter, minViewsFilter, maxViewsFilter, fromDateFilter, toDateFilter, fetchReels])
-
-  const handlePageSizeChange = (size: string) => {
-    setPageSize(Number(size))
-    setCurrentPage(0)
-  }
 
   const handleCaptionFilterChange = (value: string) => {
     setCaptionFilter(value)
     setCurrentPage(0)
   }
 
-  const handleUserIdFilterChange = (value: string) => {
-    setUserIdFilter(value)
-    setCurrentPage(0)
-  }
-
-  const handleMinViewsFilterChange = (value: string) => {
-    setMinViewsFilter(value)
-    setCurrentPage(0)
-  }
-
-  const handleMaxViewsFilterChange = (value: string) => {
-    setMaxViewsFilter(value)
-    setCurrentPage(0)
-  }
-
-  const handleFromDateFilterChange = (value: string) => {
-    setFromDateFilter(value)
-    setCurrentPage(0)
-  }
-
-  const handleToDateFilterChange = (value: string) => {
-    setToDateFilter(value)
-    setCurrentPage(0)
+  const refreshReels = () => {
+    const caption = captionFilter.trim() || undefined
+    const userId = userIdFilter ? Number(userIdFilter) : undefined
+    const minViews = minViewsFilter ? Number(minViewsFilter) : undefined
+    const maxViews = maxViewsFilter ? Number(maxViewsFilter) : undefined
+    const from = fromDateFilter ? `${fromDateFilter}T00:00:00` : undefined
+    const to = toDateFilter ? `${toDateFilter}T23:59:59` : undefined
+    fetchReels(currentPage, pageSize, caption, userId, minViews, maxViews, from, to)
   }
 
   const handleHardDelete = async () => {
@@ -150,14 +113,7 @@ export default function ReelManagementPage() {
       await reelsApi.hardDeleteAdminReel(deleteReelId)
       toast.success("Đã xóa vĩnh viễn reel thành công")
       setDeleteReelId(null)
-      // Refresh danh sách
-      const caption = captionFilter.trim() || undefined
-      const userId = userIdFilter ? Number(userIdFilter) : undefined
-      const minViews = minViewsFilter ? Number(minViewsFilter) : undefined
-      const maxViews = maxViewsFilter ? Number(maxViewsFilter) : undefined
-      const from = fromDateFilter ? `${fromDateFilter}T00:00:00` : undefined
-      const to = toDateFilter ? `${toDateFilter}T23:59:59` : undefined
-      fetchReels(currentPage, pageSize, caption, userId, minViews, maxViews, from, to)
+      refreshReels()
     } catch (error) {
       console.error("Error deleting reel:", error)
       toast.error("Không thể xóa reel")
@@ -175,14 +131,7 @@ export default function ReelManagementPage() {
       toast.success("Đã ẩn reel thành công")
       setHideReelId(null)
       setHideReason("")
-      // Refresh danh sách
-      const caption = captionFilter.trim() || undefined
-      const userId = userIdFilter ? Number(userIdFilter) : undefined
-      const minViews = minViewsFilter ? Number(minViewsFilter) : undefined
-      const maxViews = maxViewsFilter ? Number(maxViewsFilter) : undefined
-      const from = fromDateFilter ? `${fromDateFilter}T00:00:00` : undefined
-      const to = toDateFilter ? `${toDateFilter}T23:59:59` : undefined
-      fetchReels(currentPage, pageSize, caption, userId, minViews, maxViews, from, to)
+      refreshReels()
     } catch (error) {
       console.error("Error hiding reel:", error)
       toast.error("Không thể ẩn reel")
@@ -195,14 +144,7 @@ export default function ReelManagementPage() {
     try {
       await reelsApi.unhideAdminReel(reelId)
       toast.success("Đã hiển thị lại reel thành công")
-      // Refresh danh sách
-      const caption = captionFilter.trim() || undefined
-      const userId = userIdFilter ? Number(userIdFilter) : undefined
-      const minViews = minViewsFilter ? Number(minViewsFilter) : undefined
-      const maxViews = maxViewsFilter ? Number(maxViewsFilter) : undefined
-      const from = fromDateFilter ? `${fromDateFilter}T00:00:00` : undefined
-      const to = toDateFilter ? `${toDateFilter}T23:59:59` : undefined
-      fetchReels(currentPage, pageSize, caption, userId, minViews, maxViews, from, to)
+      refreshReels()
     } catch (error) {
       console.error("Error unhiding reel:", error)
       toast.error("Không thể hiển thị lại reel")
@@ -215,86 +157,57 @@ export default function ReelManagementPage() {
   })
 
   return (
-    <div className="w-full bg-gray-50 min-h-screen p-6">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Quản Lý Reels</h1>
-        <p className="text-gray-600">Quản lý và kiểm duyệt nội dung video reels</p>
-      </div>
+    <div className="flex-1 overflow-auto">
+      <PageHeader
+        title="Quản Lý Reels"
+        description="Quản lý và kiểm duyệt nội dung video reels"
+      />
 
-      {/* Filters and Search */}
-      <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-        <div className="flex flex-wrap gap-4">
-          {/* Caption Filter */}
-          <div className="flex-1 min-w-[200px]">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <Input
-                type="text"
-                placeholder="Lọc theo caption..."
-                value={captionFilter}
-                onChange={(e) => handleCaptionFilterChange(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          </div>
-
-          {/* User ID Filter */}
-          <div className="w-[100px]">
+      <SearchBar
+        value={captionFilter}
+        onChange={handleCaptionFilterChange}
+        placeholder="Tìm kiếm theo caption..."
+        actions={
+          <div className="flex flex-wrap gap-2">
             <Input
               type="number"
               placeholder="User ID..."
               value={userIdFilter}
-              onChange={(e) => handleUserIdFilterChange(e.target.value)}
+              onChange={(e) => { setUserIdFilter(e.target.value); setCurrentPage(0) }}
+              className="w-[100px]"
             />
-          </div>
-
-          {/* Min Views Filter */}
-          <div className="w-[120px]">
             <Input
               type="number"
               placeholder="Min views..."
               value={minViewsFilter}
-              onChange={(e) => handleMinViewsFilterChange(e.target.value)}
+              onChange={(e) => { setMinViewsFilter(e.target.value); setCurrentPage(0) }}
               min="0"
+              className="w-[120px]"
             />
-          </div>
-
-          {/* Max Views Filter */}
-          <div className="w-[120px]">
             <Input
               type="number"
               placeholder="Max views..."
               value={maxViewsFilter}
-              onChange={(e) => handleMaxViewsFilterChange(e.target.value)}
+              onChange={(e) => { setMaxViewsFilter(e.target.value); setCurrentPage(0) }}
               min="0"
+              className="w-[120px]"
             />
-          </div>
-
-          {/* From Date Filter */}
-          <div className="w-[150px]">
             <Input
               type="date"
               value={fromDateFilter}
-              onChange={(e) => handleFromDateFilterChange(e.target.value)}
+              onChange={(e) => { setFromDateFilter(e.target.value); setCurrentPage(0) }}
               placeholder="Từ ngày..."
+              className="w-[150px]"
             />
-          </div>
-
-          {/* To Date Filter */}
-          <div className="w-[150px]">
             <Input
               type="date"
               value={toDateFilter}
-              onChange={(e) => handleToDateFilterChange(e.target.value)}
+              onChange={(e) => { setToDateFilter(e.target.value); setCurrentPage(0) }}
               placeholder="Đến ngày..."
+              className="w-[150px]"
             />
-          </div>
-
-          {/* Status Filter */}
-          <div className="w-[180px]">
             <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-              <SelectTrigger>
+              <SelectTrigger className="w-[180px]">
                 <Filter className="w-4 h-4 mr-2" />
                 <SelectValue placeholder="Lọc trạng thái" />
               </SelectTrigger>
@@ -305,225 +218,38 @@ export default function ReelManagementPage() {
               </SelectContent>
             </Select>
           </div>
+        }
+      />
 
-          {/* Page Size */}
-          <div className="w-[150px]">
-            <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="5">5 / trang</SelectItem>
-                <SelectItem value="10">10 / trang</SelectItem>
-                <SelectItem value="20">20 / trang</SelectItem>
-                <SelectItem value="50">50 / trang</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+      <div className="px-8 pb-8">
+        <DataTableWrapper
+          isLoading={isLoading}
+          isEmpty={filteredReels.length === 0}
+          emptyMessage="Không tìm thấy reel nào. Thử thay đổi bộ lọc."
+        >
+          <ReelTable
+            reels={filteredReels}
+            onViewDetails={(id) => setSelectedReelId(id)}
+            onPreviewVideo={setPreviewVideoUrl}
+            onHide={(id) => setHideReelId(id)}
+            onUnhide={handleUnhideReel}
+            onDelete={(id) => setDeleteReelId(id)}
+          />
 
-        {/* Stats */}
-        <div className="mt-4 pt-4 border-t border-gray-200">
-          <div className="flex gap-6 text-sm text-gray-600">
-            <div>
-              <span className="font-semibold text-gray-900">{totalElements}</span> reels
+          {totalElements > 0 && totalPages > 0 && (
+            <div className="mt-6">
+              <Pagination
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                totalPages={totalPages}
+                totalElements={totalElements}
+                itemsPerPage={pageSize}
+                setItemsPerPage={setPageSize}
+                showItemsPerPageSelect={true}
+              />
             </div>
-            <div>
-              <span className="font-semibold text-gray-900">{filteredReels.length}</span> kết quả hiển thị
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Table */}
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-        {isLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <LoadingSpinner />
-          </div>
-        ) : filteredReels.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-gray-500">
-            <Play className="w-16 h-16 mb-4 text-gray-300" />
-            <p className="text-lg font-medium">Không tìm thấy reel nào</p>
-            <p className="text-sm">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
-          </div>
-        ) : (
-          <>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[80px]">ID</TableHead>
-                  <TableHead className="w-[100px]">Video</TableHead>
-                  <TableHead className="min-w-[200px]">Caption</TableHead>
-                  <TableHead className="w-[150px]">Người đăng</TableHead>
-                  <TableHead className="w-[100px] text-center">Thống kê</TableHead>
-                  <TableHead className="w-[120px]">Trạng thái</TableHead>
-                  <TableHead className="w-[150px]">Ngày tạo</TableHead>
-                  <TableHead className="w-[100px] text-center">Hành động</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredReels.map((reel) => (
-                  <TableRow key={reel.id} className="hover:bg-gray-50">
-                    <TableCell className="font-medium">#{reel.id}</TableCell>
-                    
-                    {/* Video Preview */}
-                    <TableCell>
-                      <button
-                        onClick={() => setPreviewVideoUrl(reel.videoUrl)}
-                        className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100 hover:ring-2 hover:ring-blue-500 transition-all group"
-                      >
-                        <video
-                          src={reel.videoUrl}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Play className="w-6 h-6 text-white" />
-                        </div>
-                      </button>
-                    </TableCell>
-
-                    {/* Caption */}
-                    <TableCell>
-                      <p className="text-sm line-clamp-2">{reel.caption}</p>
-                    </TableCell>
-
-                    {/* User */}
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        {reel.userAvatarUrl ? (
-                          <img
-                            src={reel.userAvatarUrl}
-                            alt={reel.userName}
-                            className="w-8 h-8 rounded-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                            <User className="w-4 h-4 text-gray-500" />
-                          </div>
-                        )}
-                        <span className="text-sm font-medium truncate">{reel.userName}</span>
-                      </div>
-                    </TableCell>
-
-                    {/* Stats */}
-                    <TableCell>
-                      <div className="flex flex-col gap-1 text-xs">
-                        <div className="flex items-center gap-1 text-gray-600">
-                          <Eye className="w-3 h-3" />
-                          <span>{reel.viewCount}</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-red-600">
-                          <Heart className="w-3 h-3" />
-                          <span>{reel.likeCount}</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-blue-600">
-                          <MessageCircle className="w-3 h-3" />
-                          <span>{reel.commentCount}</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-yellow-600">
-                          <Bookmark className="w-3 h-3" />
-                          <span>{reel.saveCount}</span>
-                        </div>
-                      </div>
-                    </TableCell>
-
-                    {/* Status */}
-                    <TableCell>
-                      {reel.status ? (
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            reel.status === "ACTIVE"
-                              ? "bg-green-100 text-green-800"
-                              : reel.status === "HIDDEN"
-                                ? "bg-red-100 text-red-800"
-                                : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
-                          {reel.status === "ACTIVE"
-                            ? "Chấp nhận"
-                            : reel.status === "HIDDEN"
-                              ? "Từ chối"
-                              : reel.status}
-                        </span>
-                      ) : (
-                        <span className="text-xs text-gray-400">Chưa xác định</span>
-                      )}
-                    </TableCell>
-
-                    {/* Created At */}
-                    <TableCell>
-                      <div className="flex items-center gap-1 text-xs text-gray-600">
-                        <Calendar className="w-3 h-3" />
-                        <span>
-                          {formatDistanceToNow(new Date(reel.createdAt), {
-                            addSuffix: true,
-                            locale: vi,
-                          })}
-                        </span>
-                      </div>
-                    </TableCell>
-
-                    {/* Actions */}
-                    <TableCell>
-                      <div className="flex flex-col gap-1">
-                        <div className="flex gap-1">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setSelectedReelId(reel.id)}
-                          >
-                            <Info className="w-4 h-4" />
-                          </Button>
-                          {reel.status === "HIDDEN" ? (
-                            <Button
-                              variant="default"
-                              size="sm"
-                              onClick={() => handleUnhideReel(reel.id)}
-                              className="bg-green-600 hover:bg-green-700"
-                            >
-                              <CheckCircle className="w-4 h-4" />
-                            </Button>
-                          ) : (
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              onClick={() => setHideReelId(reel.id)}
-                            >
-                              <EyeOff className="w-4 h-4" />
-                            </Button>
-                          )}
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => setDeleteReelId(reel.id)}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="border-t border-gray-200 p-4">
-                <Pagination
-                  currentPage={currentPage}
-                  setCurrentPage={setCurrentPage}
-                  totalPages={totalPages}
-                  totalElements={totalElements}
-                  itemsPerPage={pageSize}
-                  setItemsPerPage={setPageSize}
-                  showItemsPerPageSelect={false}
-                />
-              </div>
-            )}
-          </>
-        )}
+          )}
+        </DataTableWrapper>
       </div>
 
       {/* Video Preview Modal */}
@@ -556,15 +282,7 @@ export default function ReelManagementPage() {
         <ReelDetailModal
           reelId={selectedReelId}
           onClose={() => setSelectedReelId(null)}
-          onDeleted={() => {
-            const caption = captionFilter.trim() || undefined
-            const userId = userIdFilter ? Number(userIdFilter) : undefined
-            const minViews = minViewsFilter ? Number(minViewsFilter) : undefined
-            const maxViews = maxViewsFilter ? Number(maxViewsFilter) : undefined
-            const from = fromDateFilter ? `${fromDateFilter}T00:00:00` : undefined
-            const to = toDateFilter ? `${toDateFilter}T23:59:59` : undefined
-            fetchReels(currentPage, pageSize, caption, userId, minViews, maxViews, from, to)
-          }}
+          onDeleted={refreshReels}
         />
       )}
 

@@ -57,7 +57,7 @@ export const UpdateStatusDialog = ({
           <DialogTitle>Cập nhật trạng thái</DialogTitle>
           <DialogDescription>
             Điều chỉnh trạng thái truy cập cho tài khoản{" "}
-            <span className="font-bold text-purple-700">{user?.name}</span>
+            <span className="font-bold text-blue-700">{user?.name}</span>
           </DialogDescription>
         </DialogHeader>
 
@@ -160,7 +160,7 @@ export const UpdateStatusDialog = ({
           <Button
             onClick={handleConfirm}
             disabled={loading || status === user?.accountStatus}
-            className="bg-purple-600 hover:bg-purple-700"
+            className="bg-blue-600 hover:bg-blue-700"
           >
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Lưu thay đổi

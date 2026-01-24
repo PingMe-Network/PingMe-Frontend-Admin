@@ -36,17 +36,17 @@ export function SongTable({ songs, onEdit, onDelete }: Readonly<SongTableProps>)
   }
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      <Table>
+    <div className="bg-white rounded-lg shadow overflow-hidden">
+      <Table className="w-full">
         <TableHeader>
-          <TableRow>
-            <TableHead className="w-[60px]">Ảnh</TableHead>
+          <TableRow className="bg-gradient-to-r from-blue-100 to-cyan-100 hover:from-blue-100 hover:to-cyan-100">
+            <TableHead>Ảnh</TableHead>
             <TableHead>Tên bài hát</TableHead>
-            <TableHead>Nghệ sĩ chính</TableHead>
+            <TableHead>Nghệ sĩ</TableHead>
             <TableHead>Thời lượng</TableHead>
             <TableHead>Lượt nghe</TableHead>
             <TableHead>Thể loại</TableHead>
-            <TableHead className="text-right">Thao tác</TableHead>
+            <TableHead>Thao tác</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -61,24 +61,32 @@ export function SongTable({ songs, onEdit, onDelete }: Readonly<SongTableProps>)
                   className="w-10 h-10 rounded object-cover"
                 />
               </TableCell>
-              <TableCell className="font-medium">{song.title}</TableCell>
-              <TableCell>{song.mainArtist.name}</TableCell>
-              <TableCell>{formatDuration(song.duration)}</TableCell>
-              <TableCell>{song.playCount.toLocaleString()}</TableCell>
+              <TableCell className="font-medium truncate">
+                {song.title}
+              </TableCell>
+              <TableCell className="truncate">
+                {song.mainArtist.name}
+              </TableCell>
+              <TableCell>
+                {formatDuration(song.duration)}
+              </TableCell>
+              <TableCell>
+                {song.playCount.toLocaleString()}
+              </TableCell>
               <TableCell>
                 <div className="flex flex-wrap gap-1">
                   {song.genres.map((genre) => (
                     <span
                       key={genre.id}
-                      className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded"
+                      className="px-2 py-1 text-xs bg-blue-500 text-white rounded font-medium"
                     >
                       {genre.name}
                     </span>
                   ))}
                 </div>
               </TableCell>
-              <TableCell className="text-right">
-                <div className="flex justify-end gap-2">
+              <TableCell>
+                <div className="flex gap-2">
                   <Button
                     variant="ghost"
                     size="icon"

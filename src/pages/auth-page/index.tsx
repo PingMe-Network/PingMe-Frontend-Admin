@@ -58,7 +58,7 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Branding & Features */}
-      <div className="hidden lg:flex lg:w-1/2 bg-purple-600 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-blue-600 relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-20 w-72 h-72 bg-white rounded-full blur-3xl" />
@@ -132,11 +132,11 @@ export default function AuthPage() {
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-8 lg:p-12 bg-purple-50">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-8 lg:p-12 bg-blue-50">
         <div className="w-full max-w-md">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center gap-3 mb-10">
-            <div className="w-11 h-11 bg-purple-600 rounded-xl flex items-center justify-center">
+            <div className="w-11 h-11 bg-blue-600 rounded-xl flex items-center justify-center">
               <Shield className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -146,11 +146,11 @@ export default function AuthPage() {
           </div>
 
           {/* Form Card */}
-          <div className="bg-white p-8 rounded-2xl shadow-lg border border-purple-100">
+          <div className="bg-white p-8 rounded-2xl shadow-lg border border-blue-100">
             {/* Form Header */}
             <div className="mb-8 text-center">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-8 h-8 text-purple-600" />
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-8 h-8 text-blue-600" />
               </div>
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                 Chào mừng trở lại
@@ -177,7 +177,7 @@ export default function AuthPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-11 h-12 bg-white border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                    className="pl-11 h-12 bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                     required
                   />
                 </div>
@@ -199,13 +199,13 @@ export default function AuthPage() {
                     placeholder="Nhập mật khẩu"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-11 pr-11 h-12 bg-white border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                    className="pl-11 pr-11 h-12 bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-600 transition-colors"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors"
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -219,7 +219,7 @@ export default function AuthPage() {
               {/* Login Button */}
               <Button
                 type="submit"
-                className="w-full h-12 text-base font-semibold mt-2 bg-purple-600 hover:bg-purple-700 text-white"
+                className="w-full h-12 text-base font-semibold mt-2 bg-blue-600 hover:bg-blue-700 text-white"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -234,7 +234,7 @@ export default function AuthPage() {
             </form>
 
             {/* Footer */}
-            <div className="mt-8 pt-6 border-t border-purple-100">
+            <div className="mt-8 pt-6 border-t border-blue-100">
               <p className="text-center text-sm text-gray-500">
                 Chỉ dành cho quản trị viên được ủy quyền.
                 <br />

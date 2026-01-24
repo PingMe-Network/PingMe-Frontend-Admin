@@ -126,7 +126,7 @@ export default function AdminNavigation() {
           )}
         >
           {!isCollapsed && (
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
               Ping Admin
             </h1>
           )}
@@ -165,7 +165,7 @@ export default function AdminNavigation() {
                         className={cn(
                           "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
                           isActive
-                            ? "bg-purple-50 text-purple-600 font-medium"
+                            ? "bg-blue-50 text-blue-600 font-medium"
                             : "text-gray-700 hover:bg-gray-50",
                           isCollapsed && "justify-center px-2",
                         )}
@@ -208,7 +208,7 @@ export default function AdminNavigation() {
                   isCollapsed && "justify-center",
                 )}
               >
-                <Avatar className="h-9 w-9 ring-2 ring-purple-100">
+                <Avatar className="h-9 w-9 ring-2 ring-blue-100">
                   <AvatarImage
                     src={userSession?.avatarUrl || undefined}
                     alt={userSession?.name || "Admin"}
