@@ -1,4 +1,3 @@
-// src/features/admin/components/UserStatusBadge.tsx
 import { Badge } from "@/components/ui/badge";
 import type { AccountStatusType } from "@/types/common/userSummary";
 

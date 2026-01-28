@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
-import { PageHeader } from "../components/PageHeader";
-import { BlogSearchFilters } from "./components/BlogSearchFilters";
 import { BlogManagementTable } from "./components/BlogManagementTable";
 import Pagination from "@/components/custom/Pagination";
+import { DataTableWrapper } from "@/components/common/DataTableWrapper";
+import { SearchBar } from "@/components/common/SearchBar";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getAllBlogs, approveBlog, deleteBlog } from "@/services/blog/blogApi.ts";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/utils/errorMessageHandler";
 import { useDebounce } from "@/hooks/use-debounce";
 import { usePagination } from "@/hooks/use-pagination";
 import type { BlogReviewResponse } from "@/types/blog/blog.ts";
-import LoadingSpinner from "@/components/custom/LoadingSpinner";
 
 export default function BlogManagementPage() {
   const [blogs, setBlogs] = useState<BlogReviewResponse[]>([]);
@@ -30,7 +30,7 @@ export default function BlogManagementPage() {
     setTotalElements,
     setTotalPages,
     resetPagination,
-  } = usePagination(10);
+  } = usePagination();
 
   const fetchBlogs = useCallback(async () => {
     setIsLoading(true);
@@ -110,49 +110,67 @@ export default function BlogManagementPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      <PageHeader
-        title="Quản lý blog"
-        description="Duyệt và quản lý các bài viết blog"
-      />
+      
 
-      <BlogSearchFilters
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-        selectedStatus={selectedStatus}
-        onStatusChange={setSelectedStatus}
-      />
+      <SearchBar
+        value={searchQuery}
+        onChange={setSearchQuery}
+        placeholder="Tìm kiếm theo tiêu đề blog..."
+        actions={
+          <div className="flex gap-2">
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Chọn danh mục" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tất cả danh mục</SelectItem>
+                <SelectItem value="MUSIC">Âm nhạc</SelectItem>
+                <SelectItem value="ARTIST">Nghệ sĩ</SelectItem>
+                <SelectItem value="LIFESTYLE">Phong cách sống</SelectItem>
+                <SelectItem value="TECHNOLOGY">Công nghệ</SelectItem>
+              </SelectContent>
+            </Select>
 
-      {/* Content */}
-      <div className="p-8">
-        {isLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <LoadingSpinner />
+            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Chọn trạng thái" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tất cả trạng thái</SelectItem>
+                <SelectItem value="approved">Đã duyệt</SelectItem>
+                <SelectItem value="pending">Chờ duyệt</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-        ) : (
-          <>
-            <BlogManagementTable
-              blogs={blogs}
-              onDelete={handleDelete}
-              onApprove={handleApprove}
-            />
+        }
+      />
 
-            {blogs.length > 0 && (
-              <div className="mt-6">
-                <Pagination
-                  currentPage={currentPage}
-                  setCurrentPage={setCurrentPage}
-                  totalPages={totalPages}
-                  totalElements={totalElements}
-                  itemsPerPage={itemsPerPage}
-                  setItemsPerPage={setItemsPerPage}
-                  showItemsPerPageSelect={true}
-                />
-              </div>
-            )}
-          </>
-        )}
+      <div className="px-8 pb-8">
+        <DataTableWrapper
+          isLoading={isLoading}
+          isEmpty={blogs.length === 0}
+          emptyMessage="Không tìm thấy blog nào."
+        >
+          <BlogManagementTable
+            blogs={blogs}
+            onDelete={handleDelete}
+            onApprove={handleApprove}
+          />
+
+          {totalElements > 0 && totalPages > 0 && (
+            <div className="mt-6">
+              <Pagination
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                totalPages={totalPages}
+                totalElements={totalElements}
+                itemsPerPage={itemsPerPage}
+                setItemsPerPage={setItemsPerPage}
+                showItemsPerPageSelect={true}
+              />
+            </div>
+          )}
+        </DataTableWrapper>
       </div>
     </div>
   );

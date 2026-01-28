@@ -30,14 +30,14 @@ export function AlbumTable({ albums, onEdit, onDelete }: Readonly<AlbumTableProp
   }
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      <Table>
+    <div className="bg-white rounded-lg shadow overflow-hidden">
+      <Table className="w-full">
         <TableHeader>
-          <TableRow>
-            <TableHead className="w-[60px]">Ảnh</TableHead>
-            <TableHead>Tên album</TableHead>
-            <TableHead>Lượt nghe</TableHead>
-            <TableHead className="text-right">Thao tác</TableHead>
+          <TableRow className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600">
+            <TableHead className="text-white font-semibold">Ảnh</TableHead>
+            <TableHead className="text-white font-semibold">Tên album</TableHead>
+            <TableHead className="text-white font-semibold">Lượt nghe</TableHead>
+            <TableHead className="text-white font-semibold">Hành động</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -52,10 +52,10 @@ export function AlbumTable({ albums, onEdit, onDelete }: Readonly<AlbumTableProp
                   className="w-10 h-10 rounded object-cover"
                 />
               </TableCell>
-              <TableCell className="font-medium">{album.title}</TableCell>
+              <TableCell className="font-medium truncate">{album.title}</TableCell>
               <TableCell>{album.playCount.toLocaleString()}</TableCell>
-              <TableCell className="text-right">
-                <div className="flex justify-end gap-2">
+              <TableCell>
+                <div className="flex gap-2">
                   <Button
                     variant="ghost"
                     size="icon"

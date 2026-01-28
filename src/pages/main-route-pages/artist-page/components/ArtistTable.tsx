@@ -30,14 +30,14 @@ export function ArtistTable({ artists, onEdit, onDelete }: Readonly<ArtistTableP
   }
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      <Table>
+    <div className="bg-white rounded-lg shadow overflow-hidden">
+      <Table className="w-full">
         <TableHeader>
-          <TableRow>
-            <TableHead className="w-[60px]">Ảnh</TableHead>
-            <TableHead>Tên nghệ sĩ</TableHead>
-            <TableHead>Tiểu sử</TableHead>
-            <TableHead className="text-right">Thao tác</TableHead>
+          <TableRow className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600">
+            <TableHead className="text-white font-semibold">Ảnh</TableHead>
+            <TableHead className="text-white font-semibold">Tên nghệ sĩ</TableHead>
+            <TableHead className="text-white font-semibold">Tiểu sử</TableHead>
+            <TableHead className="text-white font-semibold">Hành động</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -50,10 +50,14 @@ export function ArtistTable({ artists, onEdit, onDelete }: Readonly<ArtistTableP
                   className="w-10 h-10 rounded-full object-cover"
                 />
               </TableCell>
-              <TableCell className="font-medium">{artist.name}</TableCell>
-              <TableCell className="max-w-md truncate">{artist.bio}</TableCell>
-              <TableCell className="text-right">
-                <div className="flex justify-end gap-2">
+              <TableCell className="font-medium truncate">
+                {artist.name}
+              </TableCell>
+              <TableCell className="truncate">
+                {artist.bio}
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-2">
                   <Button
                     variant="ghost"
                     size="icon"

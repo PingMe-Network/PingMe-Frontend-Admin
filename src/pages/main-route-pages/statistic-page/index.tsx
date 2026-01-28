@@ -1,4 +1,3 @@
-import { PageHeader } from "../components/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, FileText, CheckCircle, TrendingUp } from "lucide-react";
 
@@ -16,8 +15,8 @@ const stats = [
     value: "456",
     change: "+8%",
     icon: FileText,
-    color: "text-purple-600",
-    bgColor: "bg-purple-50",
+    color: "text-blue-600",
+    bgColor: "bg-blue-50",
   },
   {
     title: "Bài viết đã duyệt",
@@ -40,10 +39,7 @@ const stats = [
 export default function StatisticsManagementPage() {
   return (
     <div className="flex-1 overflow-auto">
-      <PageHeader
-        title="Thống kê"
-        description="Tổng quan về hoạt động của hệ thống"
-      />
+      
 
       {/* Content */}
       <div className="p-8">
@@ -54,7 +50,7 @@ export default function StatisticsManagementPage() {
             return (
               <Card
                 key={stat.title}
-                className="border-purple-100 hover:shadow-lg transition-shadow"
+                className="border-blue-100 hover:shadow-lg transition-shadow"
               >
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm font-medium text-gray-600">
@@ -79,9 +75,9 @@ export default function StatisticsManagementPage() {
 
         {/* Additional Stats */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="border-purple-100">
+          <Card className="border-blue-100">
             <CardHeader>
-              <CardTitle className="text-purple-900">
+              <CardTitle className="text-blue-900">
                 Hoạt động gần đây
               </CardTitle>
             </CardHeader>
@@ -120,9 +116,9 @@ export default function StatisticsManagementPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-purple-100">
+          <Card className="border-blue-100">
             <CardHeader>
-              <CardTitle className="text-purple-900">
+              <CardTitle className="text-blue-900">
                 Danh mục phổ biến
               </CardTitle>
             </CardHeader>
@@ -133,7 +129,7 @@ export default function StatisticsManagementPage() {
                   <div className="flex items-center gap-2">
                     <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-purple-600 rounded-full"
+                        className="h-full bg-blue-600 rounded-full"
                         style={{ width: "75%" }}
                       />
                     </div>
@@ -147,7 +143,7 @@ export default function StatisticsManagementPage() {
                   <div className="flex items-center gap-2">
                     <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-purple-600 rounded-full"
+                        className="h-full bg-blue-600 rounded-full"
                         style={{ width: "60%" }}
                       />
                     </div>
@@ -161,7 +157,7 @@ export default function StatisticsManagementPage() {
                   <div className="flex items-center gap-2">
                     <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-purple-600 rounded-full"
+                        className="h-full bg-blue-600 rounded-full"
                         style={{ width: "45%" }}
                       />
                     </div>
@@ -175,7 +171,7 @@ export default function StatisticsManagementPage() {
                   <div className="flex items-center gap-2">
                     <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-purple-600 rounded-full"
+                        className="h-full bg-blue-600 rounded-full"
                         style={{ width: "30%" }}
                       />
                     </div>

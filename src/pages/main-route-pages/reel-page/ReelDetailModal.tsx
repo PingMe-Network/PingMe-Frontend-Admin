@@ -128,7 +128,7 @@ export default function ReelDetailModal({ reelId, onClose, onDeleted }: ReelDeta
                     className="w-12 h-12 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white font-semibold">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
                     {reel.userName.charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -175,11 +175,11 @@ export default function ReelDetailModal({ reelId, onClose, onDeleted }: ReelDeta
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 p-3 bg-purple-50 rounded-lg">
-                  <Bookmark className="w-5 h-5 text-purple-600" />
+                <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg">
+                  <Bookmark className="w-5 h-5 text-blue-600" />
                   <div>
                     <p className="text-sm text-gray-600">Lượt lưu</p>
-                    <p className="font-semibold text-purple-600">{reel.saveCount.toLocaleString()}</p>
+                    <p className="font-semibold text-blue-600">{reel.saveCount.toLocaleString()}</p>
                   </div>
                 </div>
               </div>

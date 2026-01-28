@@ -52,12 +52,12 @@ export const UpdateStatusDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[450px]">
+      <DialogContent className="sm:max-w-112.5">
         <DialogHeader>
           <DialogTitle>Cập nhật trạng thái</DialogTitle>
           <DialogDescription>
             Điều chỉnh trạng thái truy cập cho tài khoản{" "}
-            <span className="font-bold text-purple-700">{user?.name}</span>
+            <span className="font-bold text-blue-700">{user?.name}</span>
           </DialogDescription>
         </DialogHeader>
 
@@ -69,11 +69,10 @@ export const UpdateStatusDialog = ({
           >
             {/* Lựa chọn ACTIVE */}
             <div
-              className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
-                status === "ACTIVE"
-                  ? "bg-green-50 border-green-500"
-                  : "hover:bg-gray-50"
-              }`}
+              className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${status === "ACTIVE"
+                ? "bg-green-50 border-green-500"
+                : "hover:bg-gray-50"
+                }`}
             >
               <RadioGroupItem
                 value="ACTIVE"
@@ -98,11 +97,10 @@ export const UpdateStatusDialog = ({
 
             {/* Lựa chọn SUSPENDED */}
             <div
-              className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
-                status === "SUSPENDED"
-                  ? "bg-orange-50 border-orange-500"
-                  : "hover:bg-gray-50"
-              }`}
+              className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${status === "SUSPENDED"
+                ? "bg-orange-50 border-orange-500"
+                : "hover:bg-gray-50"
+                }`}
             >
               <RadioGroupItem
                 value="SUSPENDED"
@@ -127,11 +125,10 @@ export const UpdateStatusDialog = ({
 
             {/* Lựa chọn DEACTIVATED */}
             <div
-              className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
-                status === "DEACTIVATED"
-                  ? "bg-red-50 border-red-500"
-                  : "hover:bg-gray-50"
-              }`}
+              className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${status === "DEACTIVATED"
+                ? "bg-red-50 border-red-500"
+                : "hover:bg-gray-50"
+                }`}
             >
               <RadioGroupItem
                 value="DEACTIVATED"
@@ -163,7 +160,7 @@ export const UpdateStatusDialog = ({
           <Button
             onClick={handleConfirm}
             disabled={loading || status === user?.accountStatus}
-            className="bg-purple-600 hover:bg-purple-700"
+            className="bg-blue-600 hover:bg-blue-700"
           >
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Lưu thay đổi
