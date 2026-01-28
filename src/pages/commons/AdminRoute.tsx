@@ -8,14 +8,14 @@ interface AdminRouteProps {
 }
 
 export const AdminRoute = ({ children }: AdminRouteProps) => {
-  const { isLogin, userSession } = useAppSelector((state) => state.auth);
+  const { isLogin, userSession, logoutReason } = useAppSelector(
+    (state) => state.auth,
+  );
 
   if (!isLogin) {
-    toast.error("Vui lòng đăng nhập");
+    if (logoutReason === "EXPIRED") toast.error("Phiên đăng nhập đã hết hạn");
     return <Navigate to="/auth" />;
   }
-
-  console.log("[PingMe] User role:", userSession.roleName);
 
   if (userSession.roleName !== "ADMIN") {
     toast.error("Bạn không có quyền truy cập trang này");
