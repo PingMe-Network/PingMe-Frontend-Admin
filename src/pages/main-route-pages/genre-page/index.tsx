@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { GenreTable } from "./components/GenreTable";
@@ -29,36 +29,48 @@ export default function GenreManagementPage() {
     setTotalPages,
   } = usePagination();
 
-  const fetchGenres = async () => {
+  const fetchGenres = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await genreService.getAll();
-      setGenres(data);
+      const pageResponse = await genreService.getAll(
+        currentPage, // Send 1-based index
+        itemsPerPage
+      );
+      setGenres(pageResponse.content);
+      setTotalElements(pageResponse.totalElements);
+      setTotalPages(pageResponse.totalPages);
     } catch (error) {
       toast.error("Không thể tải danh sách thể loại");
       console.error(error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, itemsPerPage, setTotalElements, setTotalPages]);
 
   useEffect(() => {
     fetchGenres();
-  }, []);
+  }, [fetchGenres]);
 
-  const filteredGenres = genres.filter((genre) =>
-    genre.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredGenres = searchQuery
+    ? genres.filter((genre) =>
+      genre.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    : genres;
 
+  // Update pagination when search is active (client-side filtering)
   useEffect(() => {
-    setTotalElements(filteredGenres.length);
-    setTotalPages(Math.ceil(filteredGenres.length / itemsPerPage));
-  }, [filteredGenres.length, itemsPerPage, setTotalElements, setTotalPages]);
+    if (searchQuery) {
+      setTotalElements(filteredGenres.length);
+      setTotalPages(Math.ceil(filteredGenres.length / itemsPerPage));
+    }
+  }, [searchQuery, filteredGenres.length, itemsPerPage, setTotalElements, setTotalPages]);
 
-  const paginatedGenres = filteredGenres.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedGenres = searchQuery
+    ? filteredGenres.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    )
+    : genres;
 
   const handleCreate = () => {
     setEditingGenre(null);
@@ -93,7 +105,7 @@ export default function GenreManagementPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      
+
 
       <SearchBar
         value={searchQuery}

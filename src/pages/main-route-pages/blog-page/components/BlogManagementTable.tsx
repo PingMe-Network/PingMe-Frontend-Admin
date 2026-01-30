@@ -36,22 +36,22 @@ export const BlogManagementTable = ({
       <Table className="w-full">
         <TableHeader>
           <TableRow className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600">
-            <TableHead className="font-semibold text-white">
+            <TableHead className="font-semibold text-white min-w-[300px]">
               Tiêu đề
             </TableHead>
-            <TableHead className="font-semibold text-white">
+            <TableHead className="font-semibold text-white w-[150px]">
               Danh mục
             </TableHead>
-            <TableHead className="font-semibold text-white">
+            <TableHead className="font-semibold text-white w-[150px]">
               Tác giả
             </TableHead>
-            <TableHead className="font-semibold text-white">
+            <TableHead className="font-semibold text-white w-[150px]">
               Trạng thái
             </TableHead>
-            <TableHead className="font-semibold text-white">
+            <TableHead className="font-semibold text-white w-[150px]">
               Ngày tạo
             </TableHead>
-            <TableHead className="font-semibold text-white">
+            <TableHead className="font-semibold text-white w-[150px] text-center">
               Hành động
             </TableHead>
           </TableRow>
@@ -98,8 +98,8 @@ export const BlogManagementTable = ({
                 <TableCell className="text-sm text-muted-foreground">
                   {formatRelativeTime(blog.createdAt)}
                 </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
+                <TableCell className="text-center">
+                  <div className="flex justify-center items-center gap-2">
                     <Button
                       variant="ghost"
                       size="sm"

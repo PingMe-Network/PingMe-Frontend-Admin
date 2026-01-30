@@ -10,7 +10,7 @@ export type AuthState = {
   isLogin: boolean;
   isLoading: boolean;
   error: string | null;
-  logoutReason: "MANUAL" | "EXPIRED" | null;
+  logoutReason?: "EXPIRED" | "USER_ACTION" | null;
 };
 
 const initialValue: AuthState = {
@@ -25,92 +25,83 @@ const authSlice = createSlice({
   name: "auth",
   initialState: initialValue,
   reducers: {
-    updateUserSession(state, action: PayloadAction<DefaultAuthResponse>) {
+    updateTokenManually(state, action: PayloadAction<DefaultAuthResponse>) {
       state.userSession = action.payload.userSession;
+      localStorage.setItem("access_token", action.payload.accessToken);
+      state.isLogin = true;
     },
-
-    setLogoutReason(state, action: PayloadAction<AuthState["logoutReason"]>) {
+    setLogoutReason(state, action: PayloadAction<"EXPIRED" | "USER_ACTION" | null>) {
       state.logoutReason = action.payload;
+    },
+    updateUserSession(state, action: PayloadAction<CurrentUserSessionResponse>) {
+        state.userSession = action.payload;
     },
   },
 
   extraReducers: (builder) => {
-    // ================
-    // LOGIN
-    // ================
+    builder
+      // LOGIN
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(
+        login.fulfilled,
+        (state, action: PayloadAction<DefaultAuthResponse>) => {
+          state.userSession = action.payload.userSession;
+          localStorage.setItem("access_token", action.payload.accessToken);
 
-    builder.addCase(login.pending, (state) => {
-      state.isLoading = true;
-      state.error = null;
-    });
-
-    builder.addCase(
-      login.fulfilled,
-      (state, action: PayloadAction<DefaultAuthResponse>) => {
-        state.userSession = action.payload.userSession;
-
-        state.isLogin = true;
+          state.isLogin = true;
+          state.isLoading = false;
+        }
+      )
+      .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
-      },
-    );
+        state.error = action.payload ?? null;
+      })
 
-    builder.addCase(login.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload as string;
-    });
+      // LOGOUT
+      .addCase(logout.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.userSession = {} as CurrentUserSessionResponse;
 
-    // ================
-    // LOGOUT
-    // ================
-    builder.addCase(logout.pending, (state) => {
-      state.isLoading = true;
-      state.error = null;
-    });
-
-    builder.addCase(logout.fulfilled, (state) => {
-      state.userSession = {} as CurrentUserSessionResponse;
-
-      state.isLogin = false;
-      state.isLoading = false;
-    });
-
-    builder.addCase(logout.rejected, (state, action) => {
-      state.userSession = {} as CurrentUserSessionResponse;
-
-      state.isLogin = false;
-      state.isLoading = false;
-      state.error = action.payload as string;
-    });
-
-    // ================
-    // GET CURRENT SESSION
-    // ================
-    builder.addCase(getCurrentUserSession.pending, (state) => {
-      state.isLoading = true;
-      state.error = null;
-    });
-
-    builder.addCase(
-      getCurrentUserSession.fulfilled,
-      (state, action: PayloadAction<CurrentUserSessionResponse>) => {
-        state.userSession = action.payload;
-
-        state.isLogin = true;
+        state.isLogin = false;
         state.isLoading = false;
-      },
-    );
+        localStorage.removeItem("access_token");
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
 
-    builder.addCase(getCurrentUserSession.rejected, (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload as string;
-    });
+      // GET CURRENT SESSION
+      .addCase(getCurrentUserSession.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(
+        getCurrentUserSession.fulfilled,
+        (state, action: PayloadAction<CurrentUserSessionResponse>) => {
+          state.userSession = action.payload;
+
+          state.isLogin = true;
+          state.isLoading = false;
+        }
+      )
+      .addCase(getCurrentUserSession.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
 // ===========================================
 // EXPORT REDUCER
 // ===========================================
-export const { updateUserSession, setLogoutReason } = authSlice.actions;
+export const { updateTokenManually, setLogoutReason, updateUserSession } = authSlice.actions;
 export default authSlice.reducer;
 
 // ===========================================
@@ -119,7 +110,6 @@ export default authSlice.reducer;
 export const selectUser = (state: { auth: AuthState }) =>
   state.auth.userSession;
 export const selectIsLogin = (state: { auth: AuthState }) => state.auth.isLogin;
-
 export const selectAuthLoading = (state: { auth: AuthState }) =>
   state.auth.isLoading;
 export const selectAuthError = (state: { auth: AuthState }) => state.auth.error;

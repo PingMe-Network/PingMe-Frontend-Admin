@@ -58,14 +58,14 @@ export function ReelTable({
             <Table className="w-full">
                 <TableHeader>
                     <TableRow className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600">
-                        <TableHead className="text-white font-semibold">ID</TableHead>
-                        <TableHead className="text-white font-semibold">Video</TableHead>
-                        <TableHead className="text-white font-semibold">Caption</TableHead>
-                        <TableHead className="text-white font-semibold">Người đăng</TableHead>
-                        <TableHead className="text-white font-semibold">Thống kê</TableHead>
-                        <TableHead className="text-white font-semibold">Trạng thái</TableHead>
-                        <TableHead className="text-white font-semibold">Ngày tạo</TableHead>
-                        <TableHead className="text-white font-semibold">Hành động</TableHead>
+                        <TableHead className="text-white font-semibold w-[50px]">ID</TableHead>
+                        <TableHead className="text-white font-semibold w-[100px]">Video</TableHead>
+                        <TableHead className="text-white font-semibold min-w-[200px]">Caption</TableHead>
+                        <TableHead className="text-white font-semibold w-[150px]">Người đăng</TableHead>
+                        <TableHead className="text-white font-semibold w-[120px]">Thống kê</TableHead>
+                        <TableHead className="text-white font-semibold w-[100px]">Trạng thái</TableHead>
+                        <TableHead className="text-white font-semibold w-[120px]">Ngày tạo</TableHead>
+                        <TableHead className="text-white font-semibold w-[120px] text-center">Hành động</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -163,8 +163,8 @@ export function ReelTable({
                             </TableCell>
 
                             {/* Actions */}
-                            <TableCell>
-                                <div className="flex gap-1">
+                            <TableCell className="text-center">
+                                <div className="flex justify-center gap-1">
                                     <Button
                                         variant="outline"
                                         size="sm"

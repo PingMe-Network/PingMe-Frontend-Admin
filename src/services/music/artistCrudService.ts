@@ -1,5 +1,5 @@
 import axiosClient from "@/lib/axiosClient";
-import type { ApiResponse } from "@/types/base/apiResponse";
+import type { ApiResponse, PageResponse } from "@/types/base/apiResponse";
 import type { ArtistResponse, ArtistRequest } from "@/types/music";
 import { createFormDataForArtist } from "./helpers/formDataHelper";
 
@@ -10,11 +10,17 @@ const BASE_URL = "";
  */
 export const artistCrudService = {
   /**
-   * Get all artists
+   * Get all artists with pagination
    */
-  getAll: async (): Promise<ArtistResponse[]> => {
-    const response = await axiosClient.get<ApiResponse<ArtistResponse[]>>(
+  getAll: async (
+    page: number = 1,
+    size: number = 20
+  ): Promise<PageResponse<ArtistResponse>> => {
+    const response = await axiosClient.get<ApiResponse<PageResponse<ArtistResponse>>>(
       `${BASE_URL}/artists/all`,
+      {
+        params: { page, size }
+      }
     );
     return response.data.data;
   },
@@ -30,13 +36,17 @@ export const artistCrudService = {
   },
 
   /**
-   * Search artists by name
+   * Search artists by name with pagination
    */
-  search: async (name: string): Promise<ArtistResponse[]> => {
-    const response = await axiosClient.get<ApiResponse<ArtistResponse[]>>(
+  search: async (
+    name: string,
+    page: number = 0,
+    size: number = 20
+  ): Promise<PageResponse<ArtistResponse>> => {
+    const response = await axiosClient.get<ApiResponse<PageResponse<ArtistResponse>>>(
       `${BASE_URL}/artists/search`,
       {
-        params: { name },
+        params: { name, page, size },
       },
     );
     return response.data.data;

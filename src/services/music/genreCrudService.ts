@@ -1,5 +1,5 @@
 import axiosClient from "@/lib/axiosClient";
-import type { ApiResponse } from "@/types/base/apiResponse";
+import type { ApiResponse, PageResponse } from "@/types/base/apiResponse";
 import type { GenreResponse, GenreRequest } from "@/types/music";
 import { createFormDataForGenre } from "./helpers/formDataHelper";
 
@@ -10,11 +10,17 @@ const BASE_URL = "";
  */
 export const genreCrudService = {
   /**
-   * Get all genres
+   * Get all genres with pagination
    */
-  getAll: async (): Promise<GenreResponse[]> => {
-    const response = await axiosClient.get<ApiResponse<GenreResponse[]>>(
+  getAll: async (
+    page: number = 1,
+    size: number = 20
+  ): Promise<PageResponse<GenreResponse>> => {
+    const response = await axiosClient.get<ApiResponse<PageResponse<GenreResponse>>>(
       `${BASE_URL}/genres/all`,
+      {
+        params: { page, size }
+      }
     );
     return response.data.data;
   },
@@ -51,8 +57,8 @@ export const genreCrudService = {
       `${BASE_URL}/genres/save`,
       formData,
       {
-        headers: { "Content-Type": "multipart/form-data" },
-      },
+        headers: { "Content-Type": undefined } as any,
+      }
     );
     return response.data.data;
   },
@@ -69,8 +75,8 @@ export const genreCrudService = {
       `${BASE_URL}/genres/update/${id}`,
       formData,
       {
-        headers: { "Content-Type": "multipart/form-data" },
-      },
+        headers: { "Content-Type": undefined } as any,
+      }
     );
     return response.data.data;
   },
