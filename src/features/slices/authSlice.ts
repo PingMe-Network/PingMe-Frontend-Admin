@@ -30,6 +30,12 @@ const authSlice = createSlice({
       localStorage.setItem("access_token", action.payload.accessToken);
       state.isLogin = true;
     },
+    setLogoutReason(state, action: PayloadAction<"EXPIRED" | "USER_ACTION" | null>) {
+      state.logoutReason = action.payload;
+    },
+    updateUserSession(state, action: PayloadAction<CurrentUserSessionResponse>) {
+        state.userSession = action.payload;
+    },
   },
 
   extraReducers: (builder) => {
@@ -95,7 +101,7 @@ const authSlice = createSlice({
 // ===========================================
 // EXPORT REDUCER
 // ===========================================
-export const { updateTokenManually } = authSlice.actions;
+export const { updateTokenManually, setLogoutReason, updateUserSession } = authSlice.actions;
 export default authSlice.reducer;
 
 // ===========================================
