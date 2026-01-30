@@ -10,7 +10,9 @@ interface AdminRouteProps {
 }
 
 export const AdminRoute = ({ children }: AdminRouteProps) => {
-  const { isLogin, userSession, logoutReason } = useAppSelector((state) => state.auth);
+  const { isLogin, userSession, logoutReason } = useAppSelector(
+    (state) => state.auth,
+  );
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -21,7 +23,7 @@ export const AdminRoute = ({ children }: AdminRouteProps) => {
   }, [isLogin, userSession, dispatch]);
 
   if (!isLogin) {
-    if (logoutReason === "EXPIRED") {
+    if (logoutReason === "USER_ACTION") {
       toast.error("Phiên đăng nhập đã hết hạn");
     }
     return <Navigate to="/auth" />;
