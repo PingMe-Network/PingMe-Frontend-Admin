@@ -10,6 +10,7 @@ export type AuthState = {
   isLogin: boolean;
   isLoading: boolean;
   error: string | null;
+  logoutReason?: "EXPIRED" | "USER_ACTION" | null;
 };
 
 const initialValue: AuthState = {
@@ -17,6 +18,7 @@ const initialValue: AuthState = {
   isLogin: false,
   isLoading: false,
   error: null,
+  logoutReason: null,
 };
 
 const authSlice = createSlice({

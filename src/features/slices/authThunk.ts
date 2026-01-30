@@ -27,6 +27,7 @@ export const login = createAsyncThunk<
       return thunkAPI.rejectWithValue(message);
     }
 
+    localStorage.setItem("access_token", authData.accessToken);
     toast.success("Đăng nhập thành công");
     return authData;
   } catch (err: unknown) {
@@ -39,6 +40,7 @@ export const login = createAsyncThunk<
 export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   try {
     await logoutApi();
+    localStorage.removeItem("access_token");
   } catch (err: unknown) {
     const message = getErrorMessage(err, "Đăng xuất thất bại");
     return thunkAPI.rejectWithValue(message);

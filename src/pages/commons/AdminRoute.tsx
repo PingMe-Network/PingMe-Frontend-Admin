@@ -10,7 +10,7 @@ interface AdminRouteProps {
 }
 
 export const AdminRoute = ({ children }: AdminRouteProps) => {
-  const { isLogin, userSession } = useAppSelector((state) => state.auth);
+  const { isLogin, userSession, logoutReason } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -21,11 +21,16 @@ export const AdminRoute = ({ children }: AdminRouteProps) => {
   }, [isLogin, userSession, dispatch]);
 
   if (!isLogin) {
+    if (logoutReason === "EXPIRED") {
+      toast.error("Phiên đăng nhập đã hết hạn");
+    }
     return <Navigate to="/auth" />;
   }
 
+  // Verify role one last time to prevent render before logout effect
   if (userSession.roleName !== "ADMIN") {
-    return <Navigate to="/" />;
+    // Return null while the useEffect handles the logout
+    return null;
   }
 
   return <>{children}</>;
