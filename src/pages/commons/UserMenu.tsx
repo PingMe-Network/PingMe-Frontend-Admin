@@ -27,7 +27,7 @@ const UserMenu = ({ openInNewTab = false }: UserMenuProps) => {
   const [avatarVersion, setAvatarVersion] = useState(Date.now());
 
   const handleLogout = () => {
-    dispatch(setLogoutReason("MANUAL"));
+    dispatch(setLogoutReason("USER_ACTION"));
     dispatch(logout());
   };
 

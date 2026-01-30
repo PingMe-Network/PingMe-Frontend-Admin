@@ -36,7 +36,7 @@ function SessionBootstrap() {
 function AppInner() {
   useEffect(() => {
     setupAxiosInterceptors({
-      onTokenRefreshed: (payload) => store.dispatch(updateUserSession(payload)),
+      onTokenRefreshed: (payload) => store.dispatch(updateUserSession(payload.userSession)),
       onLogout: () => {
         store.dispatch(setLogoutReason("EXPIRED"));
         store.dispatch(logout());
