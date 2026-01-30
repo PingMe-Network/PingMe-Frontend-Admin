@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { AlbumTable } from "./components/AlbumTable";
@@ -29,36 +29,51 @@ export default function AlbumManagementPage() {
     setTotalPages,
   } = usePagination();
 
-  const fetchAlbums = async () => {
+  const fetchAlbums = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await albumService.getAll();
-      setAlbums(data);
+      const pageResponse = await albumService.getAll(
+        currentPage, // Send 1-based index
+        itemsPerPage,
+        "title",
+        "ASC"
+      );
+      setAlbums(pageResponse.content);
+      setTotalElements(pageResponse.totalElements);
+      setTotalPages(pageResponse.totalPages);
     } catch (error) {
       toast.error("Không thể tải danh sách album");
       console.error(error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, itemsPerPage, setTotalElements, setTotalPages]);
 
   useEffect(() => {
     fetchAlbums();
-  }, []);
+  }, [fetchAlbums]);
 
-  const filteredAlbums = albums.filter((album) =>
-    album.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
+  const filteredAlbums = searchQuery
+    ? albums.filter((album) =>
+      album.title.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    : albums;
+
+  // Update pagination when search is active (client-side filtering)
   useEffect(() => {
-    setTotalElements(filteredAlbums.length);
-    setTotalPages(Math.ceil(filteredAlbums.length / itemsPerPage));
-  }, [filteredAlbums.length, itemsPerPage, setTotalElements, setTotalPages]);
+    if (searchQuery) {
+      setTotalElements(filteredAlbums.length);
+      setTotalPages(Math.ceil(filteredAlbums.length / itemsPerPage));
+    }
+  }, [searchQuery, filteredAlbums.length, itemsPerPage, setTotalElements, setTotalPages]);
 
-  const paginatedAlbums = filteredAlbums.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedAlbums = searchQuery
+    ? filteredAlbums.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    )
+    : albums;
 
   const handleCreate = () => {
     setEditingAlbum(null);
@@ -93,7 +108,7 @@ export default function AlbumManagementPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      
+
 
       <SearchBar
         value={searchQuery}

@@ -63,8 +63,8 @@ export function AlbumFormDialog({
 
   const fetchArtists = async () => {
     try {
-      const data = await artistService.getAll();
-      setArtists(data);
+      const data = await artistService.getAll(1, 1000);
+      setArtists(data.content);
     } catch (error) {
       toast.error("Không thể tải danh sách nghệ sĩ");
       console.error(error);

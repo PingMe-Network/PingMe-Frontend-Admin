@@ -1,5 +1,5 @@
 import axiosClient from "@/lib/axiosClient";
-import type { ApiResponse } from "@/types/base/apiResponse";
+import type { ApiResponse, PageResponse } from "@/types/base/apiResponse";
 import type { AlbumResponse, AlbumRequest } from "@/types/music";
 import { createFormDataForAlbum } from "./helpers/formDataHelper";
 
@@ -10,11 +10,19 @@ const BASE_URL = "";
  */
 export const albumCrudService = {
   /**
-   * Get all albums
+   * Get all albums with pagination
    */
-  getAll: async (): Promise<AlbumResponse[]> => {
-    const response = await axiosClient.get<ApiResponse<AlbumResponse[]>>(
+  getAll: async (
+    page: number = 1,
+    size: number = 20,
+    sort: string = "title",
+    direction: "ASC" | "DESC" = "ASC"
+  ): Promise<PageResponse<AlbumResponse>> => {
+    const response = await axiosClient.get<ApiResponse<PageResponse<AlbumResponse>>>(
       `${BASE_URL}/albums/all`,
+      {
+        params: { page, size, sort, direction }
+      }
     );
     return response.data.data;
   },
@@ -51,8 +59,8 @@ export const albumCrudService = {
       `${BASE_URL}/albums/save`,
       formData,
       {
-        headers: { "Content-Type": "multipart/form-data" },
-      },
+        headers: { "Content-Type": undefined } as any,
+      }
     );
     return response.data.data;
   },
@@ -69,8 +77,8 @@ export const albumCrudService = {
       `${BASE_URL}/albums/update/${id}`,
       formData,
       {
-        headers: { "Content-Type": "multipart/form-data" },
-      },
+        headers: { "Content-Type": undefined } as any,
+      }
     );
     return response.data.data;
   },

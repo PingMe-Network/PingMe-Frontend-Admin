@@ -129,14 +129,14 @@ export function SongFormDialog({
     try {
       const [artistsData, genresData, albumsData, rolesData] =
         await Promise.all([
-          artistService.getAll(),
-          genreService.getAll(),
-          albumService.getAll(),
+          artistService.getAll(1, 1000),
+          genreService.getAll(1, 1000),
+          albumService.getAll(1, 1000),
           commonService.getArtistRoles(),
         ]);
-      setArtists(artistsData);
-      setGenres(genresData);
-      setAlbums(albumsData);
+      setArtists(artistsData.content);
+      setGenres(genresData.content);
+      setAlbums(albumsData.content);
       setArtistRoles(rolesData);
     } catch (error) {
       toast.error("Không thể tải dữ liệu");
@@ -147,7 +147,7 @@ export function SongFormDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.title || formData.duration <= 0 || !formData.mainArtistId) {
+    if (!formData.title || !formData.mainArtistId) {
       toast.error("Vui lòng điền đầy đủ thông tin");
       return;
     }
@@ -155,8 +155,17 @@ export function SongFormDialog({
     try {
       setLoading(true);
       const submitData = {
-        ...formData,
-        otherArtists: formData.otherArtists.map(({ ...rest }) => rest),
+        title: formData.title,
+        duration: formData.duration,
+        mainArtistId: formData.mainArtistId,
+        otherArtists: formData.otherArtists.map(({ artistId, role }) => ({
+          artistId,
+          role,
+        })),
+        genreIds: formData.genreIds,
+        albumIds: formData.albumIds,
+        musicFile: formData.musicFile,
+        imgFile: formData.imgFile,
       };
       if (song) {
         await songService.update(song.id, submitData);
@@ -451,9 +460,23 @@ export function SongFormDialog({
               id="musicFile"
               type="file"
               accept="audio/*"
-              onChange={(e) =>
-                setFormData({ ...formData, musicFile: e.target.files?.[0] })
-              }
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const audio = new Audio(URL.createObjectURL(file));
+                  audio.onloadedmetadata = () => {
+                    const durationInSeconds = Math.round(audio.duration);
+                    setFormData(prev => ({
+                      ...prev,
+                      musicFile: file,
+                      duration: durationInSeconds,
+                    }));
+                    URL.revokeObjectURL(audio.src);
+                  };
+                  // Fallback for getting file but potentially failing to read duration immediately
+                  setFormData(prev => ({ ...prev, musicFile: file }));
+                }
+              }}
             />
           </div>
 

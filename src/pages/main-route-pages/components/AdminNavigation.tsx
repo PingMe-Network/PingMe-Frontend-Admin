@@ -32,14 +32,14 @@ export default function AdminNavigation() {
           )}
         >
           {!isCollapsed && (
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-bold bg-linear-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
               Ping Admin
             </h1>
           )}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             className={cn(
-              "w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors flex-shrink-0 border border-gray-200",
+              "w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors shrink-0 border border-gray-200",
             )}
             aria-label={isCollapsed ? "Mở sidebar" : "Đóng sidebar"}
           >
@@ -76,7 +76,7 @@ export default function AdminNavigation() {
                           isCollapsed && "justify-center px-2",
                         )}
                       >
-                        <Icon className="w-5 h-5 flex-shrink-0" />
+                        <Icon className="w-5 h-5 shrink-0" />
                         {!isCollapsed && <span>{item.label}</span>}
                       </Link>
                     );

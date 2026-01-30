@@ -29,16 +29,16 @@ export const AccountManagementTable = ({
       <Table className="w-full">
         <TableHeader>
           <TableRow className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600">
-            <TableHead className="font-semibold text-white">
+            <TableHead className="font-semibold text-white min-w-[250px]">
               Người dùng
             </TableHead>
             <TableHead className="font-semibold text-white">
               Email
             </TableHead>
-            <TableHead className="font-semibold text-white">
+            <TableHead className="font-semibold text-white w-[150px]">
               Trạng thái
             </TableHead>
-            <TableHead className="font-semibold text-white">
+            <TableHead className="font-semibold text-white w-[120px] text-center">
               Hành động
             </TableHead>
           </TableRow>
@@ -78,8 +78,8 @@ export const AccountManagementTable = ({
                   <UserStatusBadge status={user.accountStatus} />
                 </TableCell>
 
-                <TableCell>
-                  <div className="flex items-center gap-2">
+                <TableCell className="text-center">
+                  <div className="flex justify-center items-center gap-2">
                     <Button
                       variant="ghost"
                       size="sm"

@@ -40,13 +40,13 @@ export function SongTable({ songs, onEdit, onDelete }: Readonly<SongTableProps>)
       <Table className="w-full">
         <TableHeader>
           <TableRow className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600">
-            <TableHead className="text-white font-semibold">Ảnh</TableHead>
-            <TableHead className="text-white font-semibold">Tên bài hát</TableHead>
-            <TableHead className="text-white font-semibold">Nghệ sĩ</TableHead>
-            <TableHead className="text-white font-semibold">Thời lượng</TableHead>
-            <TableHead className="text-white font-semibold">Lượt nghe</TableHead>
-            <TableHead className="text-white font-semibold">Thể loại</TableHead>
-            <TableHead className="text-white font-semibold">Thao tác</TableHead>
+            <TableHead className="text-white font-semibold w-[80px]">Ảnh</TableHead>
+            <TableHead className="text-white font-semibold min-w-[200px]">Tên bài hát</TableHead>
+            <TableHead className="text-white font-semibold w-[180px]">Nghệ sĩ</TableHead>
+            <TableHead className="text-white font-semibold w-[100px]">Thời lượng</TableHead>
+            <TableHead className="text-white font-semibold w-[100px]">Lượt nghe</TableHead>
+            <TableHead className="text-white font-semibold w-[200px]">Thể loại</TableHead>
+            <TableHead className="text-white font-semibold w-[120px] text-center">Hành động</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -85,8 +85,8 @@ export function SongTable({ songs, onEdit, onDelete }: Readonly<SongTableProps>)
                   ))}
                 </div>
               </TableCell>
-              <TableCell>
-                <div className="flex gap-2">
+              <TableCell className="text-center">
+                <div className="flex justify-center gap-2">
                   <Button
                     variant="ghost"
                     size="icon"

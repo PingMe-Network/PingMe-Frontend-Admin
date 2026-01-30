@@ -34,10 +34,10 @@ export function ArtistTable({ artists, onEdit, onDelete }: Readonly<ArtistTableP
       <Table className="w-full">
         <TableHeader>
           <TableRow className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600">
-            <TableHead className="text-white font-semibold">Ảnh</TableHead>
-            <TableHead className="text-white font-semibold">Tên nghệ sĩ</TableHead>
+            <TableHead className="text-white font-semibold w-[80px]">Ảnh</TableHead>
+            <TableHead className="text-white font-semibold w-[250px]">Tên nghệ sĩ</TableHead>
             <TableHead className="text-white font-semibold">Tiểu sử</TableHead>
-            <TableHead className="text-white font-semibold">Hành động</TableHead>
+            <TableHead className="text-white font-semibold w-[150px] text-center">Hành động</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -53,11 +53,11 @@ export function ArtistTable({ artists, onEdit, onDelete }: Readonly<ArtistTableP
               <TableCell className="font-medium truncate">
                 {artist.name}
               </TableCell>
-              <TableCell className="truncate">
+              <TableCell className="truncate max-w-[300px]" title={artist.bio}>
                 {artist.bio}
               </TableCell>
-              <TableCell>
-                <div className="flex gap-2">
+              <TableCell className="text-center">
+                <div className="flex justify-center gap-2">
                   <Button
                     variant="ghost"
                     size="icon"

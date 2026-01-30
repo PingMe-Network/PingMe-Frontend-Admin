@@ -34,10 +34,10 @@ export function AlbumTable({ albums, onEdit, onDelete }: Readonly<AlbumTableProp
       <Table className="w-full">
         <TableHeader>
           <TableRow className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600">
-            <TableHead className="text-white font-semibold">Ảnh</TableHead>
+            <TableHead className="text-white font-semibold w-[80px]">Ảnh</TableHead>
             <TableHead className="text-white font-semibold">Tên album</TableHead>
-            <TableHead className="text-white font-semibold">Lượt nghe</TableHead>
-            <TableHead className="text-white font-semibold">Hành động</TableHead>
+            <TableHead className="text-white font-semibold w-[150px]">Lượt nghe</TableHead>
+            <TableHead className="text-white font-semibold w-[150px] text-center">Hành động</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -54,8 +54,8 @@ export function AlbumTable({ albums, onEdit, onDelete }: Readonly<AlbumTableProp
               </TableCell>
               <TableCell className="font-medium truncate">{album.title}</TableCell>
               <TableCell>{album.playCount.toLocaleString()}</TableCell>
-              <TableCell>
-                <div className="flex gap-2">
+              <TableCell className="text-center">
+                <div className="flex justify-center gap-2">
                   <Button
                     variant="ghost"
                     size="icon"

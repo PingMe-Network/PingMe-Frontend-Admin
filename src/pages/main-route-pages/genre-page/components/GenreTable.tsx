@@ -35,15 +35,15 @@ export function GenreTable({ genres, onEdit, onDelete }: Readonly<GenreTableProp
         <TableHeader>
           <TableRow className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-500 hover:to-blue-600">
             <TableHead className="text-white font-semibold">Tên thể loại</TableHead>
-            <TableHead className="text-white font-semibold">Hành động</TableHead>
+            <TableHead className="text-white font-semibold w-[150px] text-center">Hành động</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {genres.map((genre) => (
             <TableRow key={genre.id}>
               <TableCell className="font-medium truncate">{genre.name}</TableCell>
-              <TableCell>
-                <div className="flex gap-2">
+              <TableCell className="text-center">
+                <div className="flex justify-center gap-2">
                   <Button
                     variant="ghost"
                     size="icon"

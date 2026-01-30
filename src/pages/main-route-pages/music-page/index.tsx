@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { SongTable } from "./components/SongTable";
@@ -30,39 +30,52 @@ export default function MusicManagementPage() {
     setTotalPages,
   } = usePagination();
 
-  const fetchSongs = async () => {
+  const fetchSongs = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await songService.getAll();
-      setSongs(data);
+      const pageResponse = await songService.getAll(
+        currentPage, // Send 1-based index to match other services/backend
+        itemsPerPage,
+        "title",
+        "ASC"
+      );
+      setSongs(pageResponse.content);
+      setTotalElements(pageResponse.totalElements);
+      setTotalPages(pageResponse.totalPages);
     } catch (error) {
       toast.error("Không thể tải danh sách bài hát");
       console.error(error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, itemsPerPage, setTotalElements, setTotalPages]);
 
   useEffect(() => {
     fetchSongs();
-  }, []);
+  }, [fetchSongs]);
 
-  const filteredSongs = (songs || []).filter(
-    (song) =>
-      song?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      song?.mainArtist?.name?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredSongs = searchQuery
+    ? (songs || []).filter(
+      (song) =>
+        song?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        song?.mainArtist?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    : songs;
 
-  // Update pagination info when filtered data changes
+  // Update pagination when search is active (client-side filtering)
   useEffect(() => {
-    setTotalElements(filteredSongs.length);
-    setTotalPages(Math.ceil(filteredSongs.length / itemsPerPage));
-  }, [filteredSongs.length, itemsPerPage, setTotalElements, setTotalPages]);
+    if (searchQuery) {
+      setTotalElements(filteredSongs.length);
+      setTotalPages(Math.ceil(filteredSongs.length / itemsPerPage));
+    }
+  }, [searchQuery, filteredSongs.length, itemsPerPage, setTotalElements, setTotalPages]);
 
-  const paginatedSongs = filteredSongs.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedSongs = searchQuery
+    ? filteredSongs.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    )
+    : songs;
 
   const handleCreate = () => {
     setEditingSong(null);
@@ -97,7 +110,7 @@ export default function MusicManagementPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      
+
 
       <SearchBar
         value={searchQuery}

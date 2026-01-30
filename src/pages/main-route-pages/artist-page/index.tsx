@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { ArtistTable } from "./components/ArtistTable";
@@ -31,37 +31,48 @@ export default function ArtistManagementPage() {
     setTotalPages,
   } = usePagination();
 
-  const fetchArtists = async () => {
+  const fetchArtists = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await artistService.getAll();
-      setArtists(data);
+      const pageResponse = await artistService.getAll(
+        currentPage, // Send 1-based index
+        itemsPerPage
+      );
+      setArtists(pageResponse.content);
+      setTotalElements(pageResponse.totalElements);
+      setTotalPages(pageResponse.totalPages);
     } catch (error) {
       toast.error("Không thể tải danh sách nghệ sĩ");
       console.error(error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, itemsPerPage, setTotalElements, setTotalPages]);
 
   useEffect(() => {
     fetchArtists();
-  }, []);
+  }, [fetchArtists]);
 
-  const filteredArtists = artists.filter((artist) =>
-    artist.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredArtists = searchQuery
+    ? artists.filter((artist) =>
+      artist.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    : artists;
 
-  // Update pagination info when filtered data changes
+  // Update pagination when search is active (client-side filtering)
   useEffect(() => {
-    setTotalElements(filteredArtists.length);
-    setTotalPages(Math.ceil(filteredArtists.length / itemsPerPage));
-  }, [filteredArtists.length, itemsPerPage, setTotalElements, setTotalPages]);
+    if (searchQuery) {
+      setTotalElements(filteredArtists.length);
+      setTotalPages(Math.ceil(filteredArtists.length / itemsPerPage));
+    }
+  }, [searchQuery, filteredArtists.length, itemsPerPage, setTotalElements, setTotalPages]);
 
-  const paginatedArtists = filteredArtists.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedArtists = searchQuery
+    ? filteredArtists.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    )
+    : artists;
 
   const handleCreate = () => {
     setEditingArtist(null);
@@ -96,7 +107,7 @@ export default function ArtistManagementPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      
+
 
       <SearchBar
         value={searchQuery}

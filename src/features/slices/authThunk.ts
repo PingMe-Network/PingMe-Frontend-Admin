@@ -16,8 +16,19 @@ export const login = createAsyncThunk<
 >("auth/login", async (data, thunkAPI) => {
   try {
     const res = await loginLocalApi(data);
+    const authData = res.data.data;
+
+    // Check strict Admin Role
+    if (authData.userSession.roleName !== "ADMIN") {
+      const message = "Bạn không có quyền truy cập vào hệ thống quản trị.";
+      toast.error(message);
+      // Optional: Logout immediately to invalidate the session on backend if needed, 
+      // but client-side we just reject.
+      return thunkAPI.rejectWithValue(message);
+    }
+
     toast.success("Đăng nhập thành công");
-    return res.data.data;
+    return authData;
   } catch (err: unknown) {
     const message = getErrorMessage(err, "Đăng nhập thất bại");
     toast.error(message);

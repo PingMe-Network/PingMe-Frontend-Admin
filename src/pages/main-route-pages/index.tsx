@@ -10,7 +10,7 @@ export default function AdminPage() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 h-full">
         <PageHeader />
-        <div className="flex-1 overflow-y-scroll">
+        <div className="flex-1 overflow-y-scroll flex flex-col relative">
           <Outlet />
         </div>
       </div>
