@@ -1,13 +1,4 @@
-import {
-  Users,
-  FileText,
-  BarChart3,
-  Music,
-  Disc3,
-  User,
-  Tag,
-  Video,
-} from "lucide-react";
+import { Users, BarChart3, Music, Disc3, User, Tag, Video } from "lucide-react";
 
 export const NAV_GROUPS = [
   {
@@ -27,16 +18,6 @@ export const NAV_GROUPS = [
         path: "/admin/accounts",
         label: "Quản lý tài khoản",
         icon: Users,
-      },
-    ],
-  },
-  {
-    name: "Ping Blog",
-    items: [
-      {
-        path: "/admin/blogs",
-        label: "Quản lý blog",
-        icon: FileText,
       },
     ],
   },

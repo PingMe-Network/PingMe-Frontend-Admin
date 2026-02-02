@@ -15,9 +15,6 @@ const AdminPage = lazy(() => import("@/pages/main-route-pages"));
 const AccountManagementPage = lazy(
   () => import("@/pages/main-route-pages/account-page"),
 );
-const BlogManagementPage = lazy(
-  () => import("@/pages/main-route-pages/blog-page"),
-);
 const StatisticsManagementPage = lazy(
   () => import("@/pages/main-route-pages/statistic-page"),
 );
@@ -73,14 +70,6 @@ export const router = createBrowserRouter([
         element: (
           <LazyElement>
             <AccountManagementPage />
-          </LazyElement>
-        ),
-      },
-      {
-        path: "blogs",
-        element: (
-          <LazyElement>
-            <BlogManagementPage />
           </LazyElement>
         ),
       },
