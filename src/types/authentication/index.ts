@@ -69,5 +69,6 @@ export interface ChangeProfileRequest {
 export interface AdminLoginResponse {
   isAdminAccount: boolean;
   email: string;
-  accessToken?: string;
+  accessToken: string;
+  userSession: CurrentUserSessionResponse;
 }

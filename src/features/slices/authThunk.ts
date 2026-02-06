@@ -18,16 +18,14 @@ export const login = createAsyncThunk<
     const res = await loginLocalApi(data);
     const authData = res.data.data;
 
-    // Check strict Admin Role
     if (authData.isAdminAccount === false) {
       const message = "Bạn không có quyền truy cập vào hệ thống quản trị.";
       toast.error(message);
       return thunkAPI.rejectWithValue(message);
     }
 
-    if (authData.accessToken) {
-      localStorage.setItem("access_token", authData.accessToken);
-    }
+    // 1. Lưu token ngay lập tức (Quan trọng để API check verify sau đó chạy được)
+    localStorage.setItem("access_token", authData.accessToken);
 
     toast.success("Đăng nhập thành công");
     return authData;

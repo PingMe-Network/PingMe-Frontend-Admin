@@ -7,9 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Mail, Lock, Shield } from "lucide-react";
 import type { LoginRequest } from "@/types/authentication";
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
-import { getCurrentUserSession, login } from "@/features/slices/authThunk";
+import { login } from "@/features/slices/authThunk";
 import { toast } from "sonner";
-import { getErrorMessage } from "@/utils/errorMessageHandler";
 import {
   checkAdminVerificationApi,
   sendOtpToEmailApi,
@@ -38,23 +37,25 @@ export default function AuthPage() {
     const loginRequestDto: LoginRequest = { email, password };
 
     try {
+      // 1. Login (Token đã được lưu vào localStorage trong Thunk)
       const actionResult = await dispatch(login(loginRequestDto)).unwrap();
 
       if (actionResult.isAdminAccount) {
         try {
+          // 2. Check Verification (Sẽ thành công vì đã có Token)
           const checkRes = await checkAdminVerificationApi();
-          console.log(checkRes);
+
           if (checkRes.data.data === true) {
-            await dispatch(getCurrentUserSession()).unwrap();
-            navigate("/admin");
+            // Case A: Đã verify -> Vào thẳng Dashboard
+            // Không cần gọi getCurrentUserSession nữa vì login đã trả về rồi!
+            navigate("/admin", { replace: true });
           } else {
+            // Case B: Chưa verify -> Gửi OTP
             await sendOtpToEmailApi({
               email: actionResult.email,
               otpType: "ADMIN_VERIFICATION",
             });
-
-            toast.info("Vui lòng xác thực OTP để tiếp tục");
-
+            toast.info("Vui lòng xác thực OTP.");
             navigate("/auth/verify-otp", {
               state: {
                 email: actionResult.email,
@@ -62,13 +63,14 @@ export default function AuthPage() {
               },
             });
           }
-        } catch (error_) {
-          console.error(error_);
+        } catch (checkErr) {
+          console.error(checkErr);
+          // Xử lý lỗi 405 (nếu chưa sửa method) hoặc 401
           toast.error("Không thể kiểm tra trạng thái xác thực.");
         }
       }
     } catch (error) {
-      toast.error(getErrorMessage(error, "Đăng nhập thất bại"));
+      console.log(error);
     } finally {
       setIsLoading(false);
     }

@@ -20,7 +20,7 @@ export const registerLocalApi = (data: RegisterRequest) => {
 export const loginLocalApi = (data: LoginRequest) => {
   data.submitSessionMetaRequest = getSessionMetaRequest();
   return axiosClient.post<ApiResponse<AdminLoginResponse>>(
-    "/auth-management/api/v1/admin/login",
+    "/auth/admin/login",
     data,
   );
 };
