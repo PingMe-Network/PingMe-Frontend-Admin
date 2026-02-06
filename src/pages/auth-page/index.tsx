@@ -4,18 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Eye,
-  EyeOff,
-  Mail,
-  Lock,
-  Shield
-} from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Shield } from "lucide-react";
 import type { LoginRequest } from "@/types/authentication";
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
-import { login } from "@/features/slices/authThunk";
+import { getCurrentUserSession, login } from "@/features/slices/authThunk";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/utils/errorMessageHandler";
+import {
+  checkAdminVerificationApi,
+  sendOtpToEmailApi,
+} from "@/services/mail/mailManageMentApi";
 
 export default function AuthPage() {
   const navigate = useNavigate();
@@ -37,14 +35,38 @@ export default function AuthPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    const loginRequestDto: LoginRequest = {
-      email,
-      password,
-    };
+    const loginRequestDto: LoginRequest = { email, password };
 
     try {
-      await dispatch(login(loginRequestDto));
-      navigate("/admin");
+      const actionResult = await dispatch(login(loginRequestDto)).unwrap();
+
+      if (actionResult.isAdminAccount) {
+        try {
+          const checkRes = await checkAdminVerificationApi();
+          console.log(checkRes);
+          if (checkRes.data.data === true) {
+            await dispatch(getCurrentUserSession()).unwrap();
+            navigate("/admin");
+          } else {
+            await sendOtpToEmailApi({
+              email: actionResult.email,
+              otpType: "ADMIN_VERIFICATION",
+            });
+
+            toast.info("Vui lòng xác thực OTP để tiếp tục");
+
+            navigate("/auth/verify-otp", {
+              state: {
+                email: actionResult.email,
+                otpType: "ADMIN_VERIFICATION",
+              },
+            });
+          }
+        } catch (checkErr) {
+          console.error(checkErr);
+          toast.error("Không thể kiểm tra trạng thái xác thực.");
+        }
+      }
     } catch (error) {
       toast.error(getErrorMessage(error, "Đăng nhập thất bại"));
     } finally {
