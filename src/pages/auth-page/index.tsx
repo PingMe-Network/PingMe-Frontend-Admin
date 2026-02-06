@@ -62,8 +62,8 @@ export default function AuthPage() {
               },
             });
           }
-        } catch (checkErr) {
-          console.error(checkErr);
+        } catch (error_) {
+          console.error(error_);
           toast.error("Không thể kiểm tra trạng thái xác thực.");
         }
       }
