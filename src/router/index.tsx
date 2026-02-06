@@ -2,6 +2,7 @@ import { lazy } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AdminRoute } from "@/pages/commons/AdminRoute";
 import { LazyElement } from "@/components/custom/LazyElement";
+import VerifyOtpPage from "@/pages/public-routes-page/forget-password-page/components/VerifyOtpPage";
 
 // ===========================================================
 // AUTH PAGE
@@ -47,6 +48,14 @@ export const router = createBrowserRouter([
     element: (
       <LazyElement>
         <AuthPage />
+      </LazyElement>
+    ),
+  },
+  {
+    path: "/auth/verify-otp",
+    element: (
+      <LazyElement>
+        <VerifyOtpPage />
       </LazyElement>
     ),
   },
