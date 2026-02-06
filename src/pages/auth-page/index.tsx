@@ -4,18 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Eye,
-  EyeOff,
-  Mail,
-  Lock,
-  Shield
-} from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Shield } from "lucide-react";
 import type { LoginRequest } from "@/types/authentication";
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import { login } from "@/features/slices/authThunk";
 import { toast } from "sonner";
-import { getErrorMessage } from "@/utils/errorMessageHandler";
+import {
+  checkAdminVerificationApi,
+  sendOtpToEmailApi,
+} from "@/services/mail/mailManageMentApi";
 
 export default function AuthPage() {
   const navigate = useNavigate();
@@ -37,16 +34,43 @@ export default function AuthPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    const loginRequestDto: LoginRequest = {
-      email,
-      password,
-    };
+    const loginRequestDto: LoginRequest = { email, password };
 
     try {
-      await dispatch(login(loginRequestDto));
-      navigate("/admin");
+      // 1. Login (Token đã được lưu vào localStorage trong Thunk)
+      const actionResult = await dispatch(login(loginRequestDto)).unwrap();
+
+      if (actionResult.isAdminAccount) {
+        try {
+          // 2. Check Verification (Sẽ thành công vì đã có Token)
+          const checkRes = await checkAdminVerificationApi();
+
+          if (checkRes.data.data === true) {
+            // Case A: Đã verify -> Vào thẳng Dashboard
+            // Không cần gọi getCurrentUserSession nữa vì login đã trả về rồi!
+            navigate("/admin", { replace: true });
+          } else {
+            // Case B: Chưa verify -> Gửi OTP
+            await sendOtpToEmailApi({
+              email: actionResult.email,
+              otpType: "ADMIN_VERIFICATION",
+            });
+            toast.info("Vui lòng xác thực OTP.");
+            navigate("/auth/verify-otp", {
+              state: {
+                email: actionResult.email,
+                otpType: "ADMIN_VERIFICATION",
+              },
+            });
+          }
+        } catch (checkErr) {
+          console.error(checkErr);
+          // Xử lý lỗi 405 (nếu chưa sửa method) hoặc 401
+          toast.error("Không thể kiểm tra trạng thái xác thực.");
+        }
+      }
     } catch (error) {
-      toast.error(getErrorMessage(error, "Đăng nhập thất bại"));
+      console.log(error);
     } finally {
       setIsLoading(false);
     }

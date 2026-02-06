@@ -30,11 +30,17 @@ const authSlice = createSlice({
       localStorage.setItem("access_token", action.payload.accessToken);
       state.isLogin = true;
     },
-    setLogoutReason(state, action: PayloadAction<"EXPIRED" | "USER_ACTION" | null>) {
+    setLogoutReason(
+      state,
+      action: PayloadAction<"EXPIRED" | "USER_ACTION" | null>,
+    ) {
       state.logoutReason = action.payload;
     },
-    updateUserSession(state, action: PayloadAction<CurrentUserSessionResponse>) {
-        state.userSession = action.payload;
+    updateUserSession(
+      state,
+      action: PayloadAction<CurrentUserSessionResponse>,
+    ) {
+      state.userSession = action.payload;
     },
   },
 
@@ -53,7 +59,7 @@ const authSlice = createSlice({
 
           state.isLogin = true;
           state.isLoading = false;
-        }
+        },
       )
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -89,7 +95,7 @@ const authSlice = createSlice({
 
           state.isLogin = true;
           state.isLoading = false;
-        }
+        },
       )
       .addCase(getCurrentUserSession.rejected, (state, action) => {
         state.isLoading = false;
@@ -101,7 +107,8 @@ const authSlice = createSlice({
 // ===========================================
 // EXPORT REDUCER
 // ===========================================
-export const { updateTokenManually, setLogoutReason, updateUserSession } = authSlice.actions;
+export const { updateTokenManually, setLogoutReason, updateUserSession } =
+  authSlice.actions;
 export default authSlice.reducer;
 
 // ===========================================

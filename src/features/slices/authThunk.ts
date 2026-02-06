@@ -1,8 +1,8 @@
 import { loginLocalApi, logoutApi } from "@/services/authentication";
 import type {
-  DefaultAuthResponse,
   LoginRequest,
   CurrentUserSessionResponse,
+  AdminLoginResponse,
 } from "@/types/authentication";
 import { getErrorMessage } from "@/utils/errorMessageHandler";
 import { createAsyncThunk } from "@reduxjs/toolkit";
@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { getCurrentUserSessionApi } from "@/services/user/currentUserProfileApi.ts";
 
 export const login = createAsyncThunk<
-  DefaultAuthResponse,
+  AdminLoginResponse,
   LoginRequest,
   { rejectValue: string }
 >("auth/login", async (data, thunkAPI) => {
@@ -18,16 +18,15 @@ export const login = createAsyncThunk<
     const res = await loginLocalApi(data);
     const authData = res.data.data;
 
-    // Check strict Admin Role
-    if (authData.userSession.roleName !== "ADMIN") {
+    if (authData.isAdminAccount === false) {
       const message = "Bạn không có quyền truy cập vào hệ thống quản trị.";
       toast.error(message);
-      // Optional: Logout immediately to invalidate the session on backend if needed, 
-      // but client-side we just reject.
       return thunkAPI.rejectWithValue(message);
     }
 
+    // 1. Lưu token ngay lập tức (Quan trọng để API check verify sau đó chạy được)
     localStorage.setItem("access_token", authData.accessToken);
+
     toast.success("Đăng nhập thành công");
     return authData;
   } catch (err: unknown) {
