@@ -1,8 +1,12 @@
+// src/features/admin/components/UserStatusBadge.tsx
 import { Badge } from "@/components/ui/badge";
 import type { AccountStatusType } from "@/types/common/userSummary";
 
 export const UserStatusBadge = ({ status }: { status: AccountStatusType }) => {
-  const config = {
+  const config: Record<
+    AccountStatusType,
+    { label: string; className: string }
+  > = {
     ACTIVE: {
       label: "Hoạt động",
       className:
@@ -16,6 +20,11 @@ export const UserStatusBadge = ({ status }: { status: AccountStatusType }) => {
     DEACTIVATED: {
       label: "Vô hiệu hóa",
       className: "bg-red-100 text-red-700 hover:bg-red-200 border-red-200",
+    },
+    // Thêm cấu hình cho NON_ACTIVATED
+    NON_ACTIVATED: {
+      label: "Chưa kích hoạt",
+      className: "bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200",
     },
   };
 

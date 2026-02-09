@@ -48,6 +48,7 @@ export const AccountSearchFilters = ({
             <SelectContent>
               <SelectItem value="ALL">Tất cả trạng thái</SelectItem>
               <SelectItem value="ACTIVE">Hoạt động</SelectItem>
+              <SelectItem value="NON_ACTIVATED">Chưa kích hoạt</SelectItem>
               <SelectItem value="SUSPENDED">Tạm khóa</SelectItem>
               <SelectItem value="DEACTIVATED">Bị khóa</SelectItem>
             </SelectContent>

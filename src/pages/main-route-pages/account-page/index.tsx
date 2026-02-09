@@ -3,7 +3,13 @@ import { SearchBar } from "@/components/common/SearchBar";
 import { DataTableWrapper } from "@/components/common/DataTableWrapper";
 import Pagination from "@/components/custom/Pagination";
 import { usePagination } from "@/hooks/use-pagination";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { AccountManagementTable } from "./components/AccountManagementTable";
 import type {
   AccountFilterType,
@@ -22,7 +28,8 @@ export default function AccountManagementPage() {
   const [users, setUsers] = useState<UserSummaryResponse[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState<AccountFilterType>("ALL");
+  const [selectedStatus, setSelectedStatus] =
+    useState<AccountFilterType>("ALL");
 
   const {
     currentPage,
@@ -36,7 +43,9 @@ export default function AccountManagementPage() {
   } = usePagination();
 
   const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<UserSummaryResponse | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserSummaryResponse | null>(
+    null,
+  );
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -121,7 +130,7 @@ export default function AccountManagementPage() {
   // --- LOGIC KHI BẤM NÚT LƯU TRONG DIALOG CẬP NHẬT ---
   const handleRequestUpdateStatus = async (
     userId: number,
-    newStatus: AccountStatusType
+    newStatus: AccountStatusType,
   ) => {
     // 1. Nếu chọn DEACTIVATED -> Mở Confirm Dialog (chưa gọi API vội)
     if (newStatus === "DEACTIVATED") {
@@ -153,8 +162,6 @@ export default function AccountManagementPage() {
 
   return (
     <div className="flex-1 overflow-auto">
-      
-
       <SearchBar
         value={searchQuery}
         onChange={handleSearchChange}
@@ -162,7 +169,9 @@ export default function AccountManagementPage() {
         actions={
           <Select
             value={selectedStatus}
-            onValueChange={(val) => handleStatusChange(val as AccountFilterType)}
+            onValueChange={(val) =>
+              handleStatusChange(val as AccountFilterType)
+            }
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Trạng thái" />
@@ -170,6 +179,7 @@ export default function AccountManagementPage() {
             <SelectContent>
               <SelectItem value="ALL">Tất cả trạng thái</SelectItem>
               <SelectItem value="ACTIVE">Hoạt động</SelectItem>
+              <SelectItem value="NON_ACTIVATED">Chưa kích hoạt</SelectItem>
               <SelectItem value="SUSPENDED">Tạm khóa</SelectItem>
               <SelectItem value="DEACTIVATED">Bị khóa</SelectItem>
             </SelectContent>

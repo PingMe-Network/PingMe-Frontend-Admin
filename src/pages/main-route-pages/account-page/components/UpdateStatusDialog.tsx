@@ -15,7 +15,7 @@ import type {
   UserSummaryResponse,
   AccountStatusType,
 } from "@/types/common/userSummary";
-import { Loader2, ShieldAlert, ShieldCheck, Ban } from "lucide-react"; // Icon cho đẹp
+import { Loader2, ShieldAlert, ShieldCheck, Ban, UserX } from "lucide-react"; // Icon cho đẹp
 
 interface UpdateStatusDialogProps {
   open: boolean;
@@ -67,12 +67,42 @@ export const UpdateStatusDialog = ({
             onValueChange={(val) => setStatus(val as AccountStatusType)}
             className="gap-3"
           >
+            {/* Lựa chọn NON_ACTIVATED */}
+            <div
+              className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                status === "NON_ACTIVATED"
+                  ? "bg-gray-50 border-gray-500"
+                  : "hover:bg-gray-50"
+              }`}
+            >
+              <RadioGroupItem
+                value="NON_ACTIVATED"
+                id="r-non-activated"
+                className="text-gray-600 border-gray-600"
+              />
+              <Label
+                htmlFor="r-non-activated"
+                className="flex-1 cursor-pointer flex items-center gap-2"
+              >
+                <UserX className="w-4 h-4 text-gray-600" />
+                <div>
+                  <div className="font-medium text-gray-900">
+                    Chưa kích hoạt (Non Activated)
+                  </div>
+                  <div className="text-xs text-gray-600/80">
+                    Tài khoản chưa xác thực email hoặc chờ duyệt
+                  </div>
+                </div>
+              </Label>
+            </div>
+
             {/* Lựa chọn ACTIVE */}
             <div
-              className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${status === "ACTIVE"
-                ? "bg-green-50 border-green-500"
-                : "hover:bg-gray-50"
-                }`}
+              className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                status === "ACTIVE"
+                  ? "bg-green-50 border-green-500"
+                  : "hover:bg-gray-50"
+              }`}
             >
               <RadioGroupItem
                 value="ACTIVE"
@@ -97,10 +127,11 @@ export const UpdateStatusDialog = ({
 
             {/* Lựa chọn SUSPENDED */}
             <div
-              className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${status === "SUSPENDED"
-                ? "bg-orange-50 border-orange-500"
-                : "hover:bg-gray-50"
-                }`}
+              className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                status === "SUSPENDED"
+                  ? "bg-orange-50 border-orange-500"
+                  : "hover:bg-gray-50"
+              }`}
             >
               <RadioGroupItem
                 value="SUSPENDED"
@@ -125,10 +156,11 @@ export const UpdateStatusDialog = ({
 
             {/* Lựa chọn DEACTIVATED */}
             <div
-              className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${status === "DEACTIVATED"
-                ? "bg-red-50 border-red-500"
-                : "hover:bg-gray-50"
-                }`}
+              className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                status === "DEACTIVATED"
+                  ? "bg-red-50 border-red-500"
+                  : "hover:bg-gray-50"
+              }`}
             >
               <RadioGroupItem
                 value="DEACTIVATED"
