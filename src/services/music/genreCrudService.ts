@@ -1,27 +1,28 @@
-import axiosClient from "@/lib/axiosClient";
+import axiosMusicClient from "@/lib/axiosMusicClient";
 import type { ApiResponse, PageResponse } from "@/types/base/apiResponse";
 import type { GenreResponse, GenreRequest } from "@/types/music";
 import { createFormDataForGenre } from "./helpers/formDataHelper";
 
-const BASE_URL = "";
+const BASE_URL = "/music-service";
 
 /**
  * CRUD service for Genre entity
  */
 export const genreCrudService = {
   /**
-   * Get all genres with pagination
+   * Get all genres
    */
   getAll: async (
     page: number = 1,
-    size: number = 20
+    size: number = 10,
+    sortBy: string = "name",
+    sortDir: string = "ASC",
   ): Promise<PageResponse<GenreResponse>> => {
-    const response = await axiosClient.get<ApiResponse<PageResponse<GenreResponse>>>(
-      `${BASE_URL}/genres/all`,
-      {
-        params: { page, size }
-      }
-    );
+    const response = await axiosMusicClient.get<
+      ApiResponse<PageResponse<GenreResponse>>
+    >(`${BASE_URL}/genres/all`, {
+      params: { page, size, sortBy, sortDir },
+    });
     return response.data.data;
   },
 
@@ -29,7 +30,7 @@ export const genreCrudService = {
    * Get genre by ID
    */
   getById: async (id: number): Promise<GenreResponse> => {
-    const response = await axiosClient.get<ApiResponse<GenreResponse>>(
+    const response = await axiosMusicClient.get<ApiResponse<GenreResponse>>(
       `${BASE_URL}/genres/${id}`,
     );
     return response.data.data;
@@ -38,14 +39,15 @@ export const genreCrudService = {
   /**
    * Search genres by name
    */
-  search: async (name: string): Promise<GenreResponse[]> => {
-    const response = await axiosClient.get<ApiResponse<GenreResponse[]>>(
-      `${BASE_URL}/genres/search`,
-      {
-        params: { name },
-      },
-    );
-    return response.data.data;
+  search: async (
+    name: string,
+  ): Promise<ApiResponse<PageResponse<GenreResponse>>> => {
+    const response = await axiosMusicClient.get<
+      ApiResponse<PageResponse<GenreResponse>>
+    >(`${BASE_URL}/genres/search`, {
+      params: { name },
+    });
+    return response.data;
   },
 
   /**
@@ -53,12 +55,12 @@ export const genreCrudService = {
    */
   create: async (data: GenreRequest): Promise<GenreResponse> => {
     const formData = createFormDataForGenre(data);
-    const response = await axiosClient.post<ApiResponse<GenreResponse>>(
+    const response = await axiosMusicClient.post<ApiResponse<GenreResponse>>(
       `${BASE_URL}/genres/save`,
       formData,
       {
-        headers: { "Content-Type": undefined } as any,
-      }
+        headers: { "Content-Type": "multipart/form-data" },
+      },
     );
     return response.data.data;
   },
@@ -71,12 +73,12 @@ export const genreCrudService = {
     data: Partial<GenreRequest>,
   ): Promise<GenreResponse> => {
     const formData = createFormDataForGenre(data);
-    const response = await axiosClient.put<ApiResponse<GenreResponse>>(
+    const response = await axiosMusicClient.put<ApiResponse<GenreResponse>>(
       `${BASE_URL}/genres/update/${id}`,
       formData,
       {
-        headers: { "Content-Type": undefined } as any,
-      }
+        headers: { "Content-Type": "multipart/form-data" },
+      },
     );
     return response.data.data;
   },
@@ -85,7 +87,7 @@ export const genreCrudService = {
    * Soft delete genre
    */
   softDelete: async (id: number): Promise<void> => {
-    await axiosClient.delete<ApiResponse<void>>(
+    await axiosMusicClient.delete<ApiResponse<void>>(
       `${BASE_URL}/genres/soft-delete/${id}`,
     );
   },
@@ -94,7 +96,7 @@ export const genreCrudService = {
    * Hard delete genre
    */
   hardDelete: async (id: number): Promise<void> => {
-    await axiosClient.delete<ApiResponse<void>>(
+    await axiosMusicClient.delete<ApiResponse<void>>(
       `${BASE_URL}/genres/hard-delete/${id}`,
     );
   },
@@ -103,7 +105,7 @@ export const genreCrudService = {
    * Restore deleted genre
    */
   restore: async (id: number): Promise<void> => {
-    await axiosClient.put<ApiResponse<void>>(
+    await axiosMusicClient.put<ApiResponse<void>>(
       `${BASE_URL}/genres/restore/${id}`,
     );
   },

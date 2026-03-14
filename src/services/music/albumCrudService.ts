@@ -1,29 +1,28 @@
-import axiosClient from "@/lib/axiosClient";
+import axiosMusicClient from "@/lib/axiosMusicClient";
 import type { ApiResponse, PageResponse } from "@/types/base/apiResponse";
 import type { AlbumResponse, AlbumRequest } from "@/types/music";
 import { createFormDataForAlbum } from "./helpers/formDataHelper";
 
-const BASE_URL = "";
+const BASE_URL = "/music-service";
 
 /**
  * CRUD service for Album entity
  */
 export const albumCrudService = {
   /**
-   * Get all albums with pagination
+   * Get all albums
    */
   getAll: async (
     page: number = 1,
-    size: number = 20,
-    sort: string = "title",
-    direction: "ASC" | "DESC" = "ASC"
+    size: number = 10,
+    sortBy: string = "title",
+    sortDir: string = "ASC",
   ): Promise<PageResponse<AlbumResponse>> => {
-    const response = await axiosClient.get<ApiResponse<PageResponse<AlbumResponse>>>(
-      `${BASE_URL}/albums/all`,
-      {
-        params: { page, size, sort, direction }
-      }
-    );
+    const response = await axiosMusicClient.get<
+      ApiResponse<PageResponse<AlbumResponse>>
+    >(`${BASE_URL}/albums/all`, {
+      params: { page, size, sortBy, sortDir },
+    });
     return response.data.data;
   },
 
@@ -31,7 +30,7 @@ export const albumCrudService = {
    * Get album by ID
    */
   getById: async (id: number): Promise<AlbumResponse> => {
-    const response = await axiosClient.get<ApiResponse<AlbumResponse>>(
+    const response = await axiosMusicClient.get<ApiResponse<AlbumResponse>>(
       `${BASE_URL}/albums/${id}`,
     );
     return response.data.data;
@@ -40,14 +39,15 @@ export const albumCrudService = {
   /**
    * Search albums by title
    */
-  search: async (title: string): Promise<AlbumResponse[]> => {
-    const response = await axiosClient.get<ApiResponse<AlbumResponse[]>>(
-      `${BASE_URL}/albums/search`,
-      {
-        params: { title },
-      },
-    );
-    return response.data.data;
+  search: async (
+    title: string,
+  ): Promise<ApiResponse<PageResponse<AlbumResponse>>> => {
+    const response = await axiosMusicClient.get<
+      ApiResponse<PageResponse<AlbumResponse>>
+    >(`${BASE_URL}/albums/search`, {
+      params: { title },
+    });
+    return response.data;
   },
 
   /**
@@ -55,12 +55,12 @@ export const albumCrudService = {
    */
   create: async (data: AlbumRequest): Promise<AlbumResponse> => {
     const formData = createFormDataForAlbum(data);
-    const response = await axiosClient.post<ApiResponse<AlbumResponse>>(
+    const response = await axiosMusicClient.post<ApiResponse<AlbumResponse>>(
       `${BASE_URL}/albums/save`,
       formData,
       {
-        headers: { "Content-Type": undefined } as any,
-      }
+        headers: { "Content-Type": "multipart/form-data" },
+      },
     );
     return response.data.data;
   },
@@ -73,12 +73,12 @@ export const albumCrudService = {
     data: Partial<AlbumRequest>,
   ): Promise<AlbumResponse> => {
     const formData = createFormDataForAlbum(data);
-    const response = await axiosClient.put<ApiResponse<AlbumResponse>>(
+    const response = await axiosMusicClient.put<ApiResponse<AlbumResponse>>(
       `${BASE_URL}/albums/update/${id}`,
       formData,
       {
-        headers: { "Content-Type": undefined } as any,
-      }
+        headers: { "Content-Type": "multipart/form-data" },
+      },
     );
     return response.data.data;
   },
@@ -87,7 +87,7 @@ export const albumCrudService = {
    * Soft delete album
    */
   softDelete: async (id: number): Promise<void> => {
-    await axiosClient.delete<ApiResponse<void>>(
+    await axiosMusicClient.delete<ApiResponse<void>>(
       `${BASE_URL}/albums/soft-delete/${id}`,
     );
   },
@@ -96,7 +96,7 @@ export const albumCrudService = {
    * Hard delete album
    */
   hardDelete: async (id: number): Promise<void> => {
-    await axiosClient.delete<ApiResponse<void>>(
+    await axiosMusicClient.delete<ApiResponse<void>>(
       `${BASE_URL}/albums/hard-delete/${id}`,
     );
   },
@@ -105,7 +105,7 @@ export const albumCrudService = {
    * Restore deleted album
    */
   restore: async (id: number): Promise<void> => {
-    await axiosClient.put<ApiResponse<void>>(
+    await axiosMusicClient.put<ApiResponse<void>>(
       `${BASE_URL}/albums/restore/${id}`,
     );
   },

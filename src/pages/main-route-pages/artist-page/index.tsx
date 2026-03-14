@@ -38,7 +38,7 @@ export default function ArtistManagementPage() {
         currentPage, // Send 1-based index
         itemsPerPage
       );
-      setArtists(pageResponse.content);
+      setArtists(pageResponse.content ?? []);
       setTotalElements(pageResponse.totalElements);
       setTotalPages(pageResponse.totalPages);
     } catch (error) {

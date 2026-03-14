@@ -39,7 +39,7 @@ export default function MusicManagementPage() {
         "title",
         "ASC"
       );
-      setSongs(pageResponse.content);
+      setSongs(pageResponse.content ?? []);
       setTotalElements(pageResponse.totalElements);
       setTotalPages(pageResponse.totalPages);
     } catch (error) {
@@ -55,12 +55,12 @@ export default function MusicManagementPage() {
   }, [fetchSongs]);
 
   const filteredSongs = searchQuery
-    ? (songs || []).filter(
+    ? (songs ?? []).filter(
       (song) =>
         song?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         song?.mainArtist?.name?.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    : songs;
+    : (songs ?? []);
 
   // Update pagination when search is active (client-side filtering)
   useEffect(() => {
