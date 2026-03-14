@@ -1,92 +1,82 @@
-import axiosClient from "@/lib/axiosClient";
+import axiosMusicClient from "@/lib/axiosMusicClient";
 import type { Song } from "@/types/music/song";
-import type { TopSongPlayCounter, SongResponseWithAllAlbum } from "@/types/music";
+import type {
+  TopSongPlayCounter,
+  SongResponseWithAllAlbum,
+} from "@/types/music";
 import type { ApiResponse, PageResponse } from "@/types/base/apiResponse";
 
 export const songApi = {
-  getTopSongs: async (number = 10): Promise<ApiResponse<SongResponseWithAllAlbum[]>> => {
-    const response = await axiosClient.get<ApiResponse<SongResponseWithAllAlbum[]>>(
-      `/songs/getTopSong/${number}`
-    );
-    return response.data;
+  /**
+   * Get top songs
+   * @returns Array of songs (unwrapped from ApiResponse)
+   */
+  getTopSongs: async (
+    number = 10,
+  ): Promise<SongResponseWithAllAlbum[]> => {
+    const response = await axiosMusicClient.get<
+      ApiResponse<SongResponseWithAllAlbum[]>
+    >(`/music-service/songs/getTopSong/${number}`);
+    return response.data?.data || [];
   },
 
-  getSongById: async (id: number): Promise<ApiResponse<Song>> => {
-    const response = await axiosClient.get<ApiResponse<Song>>(`/songs/${id}`);
-    return response.data;
+  /**
+   * Get song by ID
+   * @returns Single song object (unwrapped from ApiResponse)
+   */
+  getSongById: async (id: number): Promise<Song> => {
+    const response = await axiosMusicClient.get<ApiResponse<Song>>(`/music-service/songs/${id}`);
+    return response.data?.data as Song;
   },
 
+  /**
+   * Search songs by title
+   * @returns Array of songs (unwrapped from ApiResponse<PageResponse>)
+   */
   searchSongByTitle: async (
     title: string,
-    page: number = 1,
-    size: number = 20
-  ): Promise<ApiResponse<PageResponse<Song>>> => {
-    const response = await axiosClient.get<ApiResponse<PageResponse<Song>>>(
-      `/songs/search`,
-      { params: { title, page, size } }
-    );
-    return response.data;
-  },
-
-  /**
-   * Get all songs with pagination
-   */
-  getAll: async (
-    page: number = 0,
-    size: number = 20,
-    sort: string = "title",
-    direction: "ASC" | "DESC" = "ASC"
-  ): Promise<ApiResponse<PageResponse<SongResponseWithAllAlbum>>> => {
-    const response = await axiosClient.get<
+  ): Promise<SongResponseWithAllAlbum[]> => {
+    const response = await axiosMusicClient.get<
       ApiResponse<PageResponse<SongResponseWithAllAlbum>>
-    >(`/songs/all`, {
-      params: { page, size, sort, direction },
+    >(`/music-service/songs/search`, {
+      params: { title },
     });
-    return response.data;
+    return response.data?.data?.content || response.data?.data || [];
   },
 
   /**
-   * Filter songs by genre
+   * Get top songs today
+   * @returns Array of top song counters (unwrapped)
    */
-  filterByGenre: async (
-    genreId: number,
-    page: number = 1,
-    size: number = 20
-  ): Promise<ApiResponse<PageResponse<SongResponseWithAllAlbum>>> => {
-    const response = await axiosClient.get<
-      ApiResponse<PageResponse<SongResponseWithAllAlbum>>
-    >(`/songs/genre`, {
-      params: { id: genreId, page, size },
-    });
-    return response.data;
+  getTopSongsToday: async (limit = 50): Promise<TopSongPlayCounter[]> => {
+    const response = await axiosMusicClient.get<ApiResponse<TopSongPlayCounter[]>>(
+      `/music-service/top-songs/today?limit=${limit}`,
+    );
+    const data = response.data.data || response.data;
+    return Array.isArray(data) ? data : [];
   },
 
   /**
-   * Increase play count for song
+   * Get top songs this week
+   * @returns Array of top song counters (unwrapped)
    */
-  increasePlayCount: async (id: number): Promise<void> => {
-    await axiosClient.post<ApiResponse<void>>(`/songs/${id}/play`);
+  getTopSongsThisWeek: async (limit = 50): Promise<TopSongPlayCounter[]> => {
+    const response = await axiosMusicClient.get<ApiResponse<TopSongPlayCounter[]>>(
+      `/music-service/top-songs/week?limit=${limit}`,
+    );
+    const data = response.data.data || response.data;
+    return Array.isArray(data) ? data : [];
   },
 
-  // Rankings endpoints
-  getTopSongsToday: async (limit = 50): Promise<ApiResponse<TopSongPlayCounter[]>> => {
-    const response = await axiosClient.get<ApiResponse<TopSongPlayCounter[]>>(
-      `/top-songs/today?limit=${limit}`
+  /**
+   * Get top songs this month
+   * @returns Array of top song counters (unwrapped)
+   */
+  getTopSongsThisMonth: async (limit = 50): Promise<TopSongPlayCounter[]> => {
+    const response = await axiosMusicClient.get<ApiResponse<TopSongPlayCounter[]>>(
+      `/music-service/top-songs/month?limit=${limit}`,
     );
-    return response.data;
-  },
-
-  getTopSongsThisWeek: async (limit = 50): Promise<ApiResponse<TopSongPlayCounter[]>> => {
-    const response = await axiosClient.get<ApiResponse<TopSongPlayCounter[]>>(
-      `/top-songs/week?limit=${limit}`
-    );
-    return response.data;
-  },
-
-  getTopSongsThisMonth: async (limit = 50): Promise<ApiResponse<TopSongPlayCounter[]>> => {
-    const response = await axiosClient.get<ApiResponse<TopSongPlayCounter[]>>(
-      `/top-songs/month?limit=${limit}`
-    );
-    return response.data;
+    const data = response.data.data || response.data;
+    return Array.isArray(data) ? data : [];
   },
 };

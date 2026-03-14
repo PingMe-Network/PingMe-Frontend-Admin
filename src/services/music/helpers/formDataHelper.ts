@@ -20,7 +20,7 @@ export function createFormDataForArtist(
   const jsonBlob = new Blob([JSON.stringify(requestData)], {
     type: "application/json",
   });
-  formData.append("artistRequest", jsonBlob, "artistRequest.json");
+  formData.append("artistRequest", jsonBlob);
 
   // Add file if present
   if (imgFile) {
@@ -47,7 +47,7 @@ export function createFormDataForAlbum(
   const jsonBlob = new Blob([JSON.stringify(requestData)], {
     type: "application/json",
   });
-  formData.append("albumRequest", jsonBlob, "albumRequest.json");
+  formData.append("albumRequest", jsonBlob);
 
   if (imgFile) {
     console.log("[PingMe] Adding album cover image file:", imgFile.name);
@@ -80,7 +80,7 @@ export function createFormDataForSong(
   const jsonBlob = new Blob([JSON.stringify(requestData)], {
     type: "application/json",
   });
-  formData.append("songRequest", jsonBlob, "songRequest.json");
+  formData.append("songRequest", jsonBlob);
 
   if (musicFile) {
     console.log("[PingMe] Adding music file:", musicFile.name);
@@ -114,6 +114,6 @@ export function createFormDataForGenre(
   const jsonBlob = new Blob([JSON.stringify(data)], {
     type: "application/json",
   });
-  formData.append("genreRequest", jsonBlob, "genreRequest.json");
+  formData.append("genreRequest", jsonBlob);
   return formData;
 }

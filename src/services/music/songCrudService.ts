@@ -1,4 +1,4 @@
-import axiosClient from "@/lib/axiosClient";
+import axiosMusicClient from "@/lib/axiosMusicClient";
 import type { ApiResponse, PageResponse } from "@/types/base/apiResponse";
 import type {
   SongResponse,
@@ -7,25 +7,25 @@ import type {
 } from "@/types/music";
 import { createFormDataForSong } from "./helpers/formDataHelper";
 
-const BASE_URL = "";
+const BASE_URL = "/music-service";
 
 /**
  * CRUD service for Song entity
  */
 export const songCrudService = {
   /**
-   * Get all songs with pagination
+   * Get all songs
    */
   getAll: async (
-    page: number = 0,
-    size: number = 20,
-    sort: string = "title",
-    direction: "ASC" | "DESC" = "ASC"
+    page: number = 1,
+    size: number = 10,
+    sortBy: string = "title",
+    sortDir: string = "ASC",
   ): Promise<PageResponse<SongResponseWithAllAlbum>> => {
-    const response = await axiosClient.get<
+    const response = await axiosMusicClient.get<
       ApiResponse<PageResponse<SongResponseWithAllAlbum>>
     >(`${BASE_URL}/songs/all`, {
-      params: { page, size, sort, direction },
+      params: { page, size, sortBy, sortDir },
     });
     return response.data.data;
   },
@@ -33,65 +33,59 @@ export const songCrudService = {
   /**
    * Get song by ID
    */
-  getById: async (id: number): Promise<SongResponseWithAllAlbum> => {
-    const response = await axiosClient.get<
+  getById: async (
+    id: number,
+  ): Promise<ApiResponse<SongResponseWithAllAlbum>> => {
+    const response = await axiosMusicClient.get<
       ApiResponse<SongResponseWithAllAlbum>
     >(`${BASE_URL}/songs/${id}`);
-    return response.data.data;
+    return response.data;
   },
 
   /**
-   * Search songs by title with pagination
+   * Search songs by title
    */
   search: async (
     title: string,
-    page: number = 0,
-    size: number = 20
-  ): Promise<PageResponse<SongResponse>> => {
-    const response = await axiosClient.get<
-      ApiResponse<PageResponse<SongResponse>>
+  ): Promise<ApiResponse<PageResponse<SongResponseWithAllAlbum>>> => {
+    const response = await axiosMusicClient.get<
+      ApiResponse<PageResponse<SongResponseWithAllAlbum>>
     >(`${BASE_URL}/songs/search`, {
-      params: { title, page, size },
+      params: { title },
     });
-    return response.data.data;
+    return response.data;
   },
 
   /**
-   * Filter songs by genre with pagination
+   * Filter songs by genre
    */
   filterByGenre: async (
     genreId: number,
-    page: number = 1,
-    size: number = 20
-  ): Promise<PageResponse<SongResponseWithAllAlbum>> => {
-    const response = await axiosClient.get<
+  ): Promise<ApiResponse<PageResponse<SongResponseWithAllAlbum>>> => {
+    const response = await axiosMusicClient.get<
       ApiResponse<PageResponse<SongResponseWithAllAlbum>>
     >(`${BASE_URL}/songs/genre`, {
-      params: { id: genreId, page, size },
+      params: { id: genreId },
     });
-    return response.data.data;
+    return response.data;
   },
-
   /**
    * Create new song
    */
   create: async (data: SongRequest): Promise<SongResponse> => {
+    console.log("[PingMe] Creating song with data:", data);
     const formData = createFormDataForSong(data);
-    try {
-      const response = await axiosClient.post<ApiResponse<SongResponse[] | SongResponse>>(
-        `${BASE_URL}/songs/save`,
-        formData,
-        {
-          headers: { "Content-Type": undefined } as any,
-        }
-      );
-      // Backend might return ApiResponse<List> or Object, so handle both
-      const result = response.data.data;
-      return Array.isArray(result) ? result[0] : result;
-    } catch (error: any) {
-      console.error("[PingMe] Create Song Error Details:", error.response?.data);
-      throw error;
-    }
+    const response = await axiosMusicClient.post<ApiResponse<SongResponse[]>>(
+      `${BASE_URL}/songs/save`,
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      },
+    );
+    console.log("[PingMe] Song create response:", response.data);
+    // Backend returns ApiResponse<List>, so unwrap and return first item
+    const songs = response.data.data;
+    return Array.isArray(songs) ? songs[0] : songs;
   },
 
   /**
@@ -99,28 +93,29 @@ export const songCrudService = {
    */
   update: async (
     id: number,
-    data: Partial<SongRequest>
+    data: Partial<SongRequest>,
   ): Promise<SongResponse> => {
+    console.log("[PingMe] Updating song", id, "with data:", data);
     const formData = createFormDataForSong(data);
-    const response = await axiosClient.put<ApiResponse<SongResponse[] | SongResponse>>(
+    const response = await axiosMusicClient.put<ApiResponse<SongResponse[]>>(
       `${BASE_URL}/songs/update/${id}`,
       formData,
       {
-        headers: { "Content-Type": undefined } as any,
+        headers: { "Content-Type": "multipart/form-data" },
       },
     );
-
+    console.log("[PingMe] Song update response:", response.data);
     // Backend returns ApiResponse<List>, so unwrap and return first item
-    const result = response.data.data;
-    return Array.isArray(result) ? result[0] : result;
+    const songs = response.data.data;
+    return Array.isArray(songs) ? songs[0] : songs;
   },
 
   /**
    * Soft delete song
    */
   softDelete: async (id: number): Promise<void> => {
-    await axiosClient.delete<ApiResponse<void>>(
-      `${BASE_URL}/songs/soft-delete/${id}`
+    await axiosMusicClient.delete<ApiResponse<void>>(
+      `${BASE_URL}/songs/soft-delete/${id}`,
     );
   },
 
@@ -128,8 +123,8 @@ export const songCrudService = {
    * Hard delete song
    */
   hardDelete: async (id: number): Promise<void> => {
-    await axiosClient.delete<ApiResponse<void>>(
-      `${BASE_URL}/songs/hard-delete/${id}`
+    await axiosMusicClient.delete<ApiResponse<void>>(
+      `${BASE_URL}/songs/hard-delete/${id}`,
     );
   },
 
@@ -137,13 +132,13 @@ export const songCrudService = {
    * Restore deleted song
    */
   restore: async (id: number): Promise<void> => {
-    await axiosClient.put<ApiResponse<void>>(`${BASE_URL}/songs/restore/${id}`);
+    await axiosMusicClient.put<ApiResponse<void>>(`${BASE_URL}/songs/restore/${id}`);
   },
 
   /**
    * Increase play count for song
    */
   increasePlayCount: async (id: number): Promise<void> => {
-    await axiosClient.post<ApiResponse<void>>(`${BASE_URL}/songs/${id}/play`);
+    await axiosMusicClient.post<ApiResponse<void>>(`${BASE_URL}/songs/${id}/play`);
   },
 };

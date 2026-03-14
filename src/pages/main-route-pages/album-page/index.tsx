@@ -38,7 +38,7 @@ export default function AlbumManagementPage() {
         "title",
         "ASC"
       );
-      setAlbums(pageResponse.content);
+      setAlbums(pageResponse.content ?? []);
       setTotalElements(pageResponse.totalElements);
       setTotalPages(pageResponse.totalPages);
     } catch (error) {

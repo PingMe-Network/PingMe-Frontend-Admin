@@ -36,7 +36,7 @@ export default function GenreManagementPage() {
         currentPage, // Send 1-based index
         itemsPerPage
       );
-      setGenres(pageResponse.content);
+      setGenres(pageResponse.content ?? []);
       setTotalElements(pageResponse.totalElements);
       setTotalPages(pageResponse.totalPages);
     } catch (error) {
