@@ -1,4 +1,4 @@
-import axiosClient from "@/lib/axiosClient.ts";
+import axiosAuthClient from "@/lib/axiosAuthClient";
 import type {
   ApiResponse,
   PageResponse,
@@ -16,8 +16,8 @@ export interface UserPaginationParams extends PaginationParams {
 }
 
 export const getAllUsers = (params: UserPaginationParams) => {
-  return axiosClient.get<ApiResponse<PageResponse<UserSummaryResponse>>>(
-    "/users",
+  return axiosAuthClient.get<ApiResponse<PageResponse<UserSummaryResponse>>>(
+    "/auth-service/users",
     {
       params: {
         page: params.page,
@@ -26,12 +26,12 @@ export const getAllUsers = (params: UserPaginationParams) => {
         search: params.search,
         accountStatus: params.status === "ALL" ? undefined : params.status,
       },
-    }
+    },
   );
 };
 
 export const updateAccountStatus = (id: number, status: AccountStatusType) => {
-  return axiosClient.post(`/users/${id}`, {
+  return axiosAuthClient.post(`/auth-service/users/${id}`, {
     accountStatus: status,
   });
 };

@@ -8,11 +8,8 @@ import { Eye, EyeOff, Mail, Lock, Shield } from "lucide-react";
 import type { LoginRequest } from "@/types/authentication";
 import { useAppDispatch, useAppSelector } from "@/features/hooks";
 import { login } from "@/features/slices/authThunk";
-import { toast } from "sonner";
-import {
-  checkAdminVerificationApi,
-  sendOtpToEmailApi,
-} from "@/services/authentication/authOtpApi";
+
+
 
 export default function AuthPage() {
   const navigate = useNavigate();
@@ -41,33 +38,7 @@ export default function AuthPage() {
       const actionResult = await dispatch(login(loginRequestDto)).unwrap();
 
       if (actionResult.isAdminAccount) {
-        try {
-          // 2. Check Verification (Sẽ thành công vì đã có Token)
-          const checkRes = await checkAdminVerificationApi();
-
-          if (checkRes.data.data === true) {
-            // Case A: Đã verify -> Vào thẳng Dashboard
-            // Không cần gọi getCurrentUserSession nữa vì login đã trả về rồi!
-            navigate("/admin", { replace: true });
-          } else {
-            // Case B: Chưa verify -> Gửi OTP
-            await sendOtpToEmailApi({
-              email: actionResult.email,
-              authOtpType: "ADMIN_VERIFICATION",
-            });
-            toast.info("Vui lòng xác thực OTP.");
-            navigate("/auth/verify-otp", {
-              state: {
-                email: actionResult.email,
-                authOtpType: "ADMIN_VERIFICATION",
-              },
-            });
-          }
-        } catch (checkErr) {
-          console.error(checkErr);
-          // Xử lý lỗi 405 (nếu chưa sửa method) hoặc 401
-          toast.error("Không thể kiểm tra trạng thái xác thực.");
-        }
+        navigate("/admin", { replace: true });
       }
     } catch (error) {
       console.log(error);
