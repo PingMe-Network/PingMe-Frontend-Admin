@@ -1,6 +1,6 @@
 export interface SendOtpRequest {
   email: string;
-  otpType: "USER_FORGET_PASSWORD" | "ADMIN_VERIFICATION";
+  authOtpType: "USER_FORGET_PASSWORD" | "ADMIN_VERIFICATION";
 }
 
 export interface SendOtpResponse {
@@ -12,7 +12,7 @@ export interface SendOtpResponse {
 export interface VerifyOtpRequest {
   otp: string;
   mailRecipient: string;
-  otpType: "USER_FORGET_PASSWORD" | "ADMIN_VERIFICATION";
+  authOtpType: "USER_FORGET_PASSWORD" | "ADMIN_VERIFICATION";
 }
 
 export interface VerifyOtpResponse {

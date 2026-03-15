@@ -53,13 +53,13 @@ export default function AuthPage() {
             // Case B: Chưa verify -> Gửi OTP
             await sendOtpToEmailApi({
               email: actionResult.email,
-              otpType: "ADMIN_VERIFICATION",
+              authOtpType: "ADMIN_VERIFICATION",
             });
             toast.info("Vui lòng xác thực OTP.");
             navigate("/auth/verify-otp", {
               state: {
                 email: actionResult.email,
-                otpType: "ADMIN_VERIFICATION",
+                authOtpType: "ADMIN_VERIFICATION",
               },
             });
           }

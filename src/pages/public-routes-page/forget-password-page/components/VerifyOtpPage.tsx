@@ -12,7 +12,7 @@ const VerifyOtpPage: React.FC = () => {
   // Lấy data từ state truyền qua
   const email = location.state?.email;
   // Mặc định là FORGET nếu không truyền, hoặc lấy từ state nếu có
-  const otpType = location.state?.otpType || "USER_FORGET_PASSWORD";
+  const authOtpType = location.state?.authOtpType || "USER_FORGET_PASSWORD";
 
   useEffect(() => {
     if (!email) {
@@ -30,7 +30,7 @@ const VerifyOtpPage: React.FC = () => {
       const response = await verifyOtpApi({
         otp: otp,
         mailRecipient: email,
-        otpType: otpType,
+        authOtpType: authOtpType,
       });
 
       const resData = response.data;
@@ -38,7 +38,7 @@ const VerifyOtpPage: React.FC = () => {
       if (resData.errorCode === 200 && resData.data.isValid === true) {
         console.log("OTP Validated:", resData.data);
 
-        if (otpType === "ADMIN_VERIFICATION") {
+        if (authOtpType === "ADMIN_VERIFICATION") {
           navigate("/admin");
         } else {
           if (resData.data.resetPasswordToken) {
