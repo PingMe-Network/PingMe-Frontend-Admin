@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import {
   checkAdminVerificationApi,
   sendOtpToEmailApi,
-} from "@/services/mail/mailManageMentApi";
+} from "@/services/authentication/authOtpApi";
 
 export default function AuthPage() {
   const navigate = useNavigate();

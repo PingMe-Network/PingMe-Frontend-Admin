@@ -1,4 +1,5 @@
 import { loginLocalApi, logoutApi } from "@/services/authentication";
+import { getCurrentUserSessionApi } from "@/services/user/currentUserProfileApi";
 import type {
   LoginRequest,
   CurrentUserSessionResponse,
@@ -7,7 +8,6 @@ import type {
 import { getErrorMessage } from "@/utils/errorMessageHandler";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "sonner";
-import { getCurrentUserSessionApi } from "@/services/user/currentUserProfileApi.ts";
 
 export const login = createAsyncThunk<
   AdminLoginResponse,

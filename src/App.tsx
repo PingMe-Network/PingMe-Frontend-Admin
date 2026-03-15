@@ -10,6 +10,8 @@ import { persistor, store } from "./features/store";
 import { useAppDispatch, useAppSelector } from "./features/hooks";
 import { getCurrentUserSession, logout } from "./features/slices/authThunk";
 import { setupAxiosInterceptors } from "./lib/axiosClient";
+import { setupAuthAxiosInterceptors } from "./lib/axiosAuthClient";
+import { setupMusicAxiosInterceptors } from "./lib/axiosMusicClient";
 import {
   setLogoutReason,
   updateUserSession,
@@ -35,14 +37,18 @@ function SessionBootstrap() {
 
 function AppInner() {
   useEffect(() => {
-    setupAxiosInterceptors({
-      onTokenRefreshed: (payload) =>
+    const opts = {
+      onTokenRefreshed: (payload: any) =>
         store.dispatch(updateUserSession(payload.userSession)),
       onLogout: () => {
         store.dispatch(setLogoutReason("EXPIRED"));
         store.dispatch(logout());
       },
-    });
+    };
+
+    setupAxiosInterceptors(opts);
+    setupAuthAxiosInterceptors(opts);
+    setupMusicAxiosInterceptors(opts);
   }, []);
 
   return (
