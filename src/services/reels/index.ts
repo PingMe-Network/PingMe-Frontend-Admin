@@ -1,4 +1,4 @@
-import axiosClient from "@/lib/axiosClient";
+import axiosMusicClient from "@/lib/axiosMusicClient";
 import type {
   Reel,
   ReelFeedResponse,
@@ -20,7 +20,7 @@ import type { ApiResponse } from "@/types/base/apiResponse";
 export const reelsApi = {
   // Fetch reel feed with pagination
   getReelFeed: async (page = 0, size = 10) => {
-    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
+    const response = await axiosMusicClient.get<ApiResponse<ReelFeedResponse>>(
       `/reels/feed?page=${page}&size=${size}`
     );
     return response.data.data;
@@ -28,7 +28,7 @@ export const reelsApi = {
 
   // Get reel details by ID
   getReelById: async (reelId: number) => {
-    const response = await axiosClient.get<ApiResponse<ReelDetailResponse>>(
+    const response = await axiosMusicClient.get<ApiResponse<ReelDetailResponse>>(
       `/reels/${reelId}`
     );
     return response.data.data;
@@ -46,7 +46,7 @@ export const reelsApi = {
     );
     formData.append("video", data.video);
 
-    const response = await axiosClient.post<ApiResponse<Reel>>(
+    const response = await axiosMusicClient.post<ApiResponse<Reel>>(
       "/reels",
       formData,
       {
@@ -74,7 +74,7 @@ export const reelsApi = {
       formData.append("video", data.video);
     }
 
-    const response = await axiosClient.put<ApiResponse<Reel>>(
+    const response = await axiosMusicClient.put<ApiResponse<Reel>>(
       `/reels/${reelId}`,
       formData,
       {
@@ -86,7 +86,7 @@ export const reelsApi = {
 
   // Delete reel
   deleteReel: async (reelId: number) => {
-    const response = await axiosClient.delete<ApiResponse<void>>(
+    const response = await axiosMusicClient.delete<ApiResponse<void>>(
       `/reels/${reelId}`
     );
     return response.data;
@@ -94,7 +94,7 @@ export const reelsApi = {
 
   // Toggle like
   toggleLike: async (reelId: number) => {
-    const response = await axiosClient.post<ApiResponse<Reel>>(
+    const response = await axiosMusicClient.post<ApiResponse<Reel>>(
       `/reels/${reelId}/likes/toggle`
     );
     return response.data.data;
@@ -102,7 +102,7 @@ export const reelsApi = {
 
   // Get comments for reel
   getComments: async (reelId: number, page = 0, size = 20) => {
-    const response = await axiosClient.get<ApiResponse<ReelCommentResponse>>(
+    const response = await axiosMusicClient.get<ApiResponse<ReelCommentResponse>>(
       `/reel-comments/reels/${reelId}?page=${page}&size=${size}`
     );
     return response.data.data;
@@ -110,7 +110,7 @@ export const reelsApi = {
 
   // Create comment
   createComment: async (reelId: number, data: CreateCommentRequest) => {
-    const response = await axiosClient.post<ApiResponse<ReelComment>>(
+    const response = await axiosMusicClient.post<ApiResponse<ReelComment>>(
       `/reel-comments/reels/${reelId}`,
       data
     );
@@ -119,7 +119,7 @@ export const reelsApi = {
 
   // Delete comment
   deleteComment: async (commentId: number) => {
-    const response = await axiosClient.delete<ApiResponse<void>>(
+    const response = await axiosMusicClient.delete<ApiResponse<void>>(
       `/reel-comments/${commentId}`
     );
     return response.data;
@@ -127,7 +127,7 @@ export const reelsApi = {
 
   // Update comment
   updateComment: async (commentId: number, content: string) => {
-    const response = await axiosClient.put<ApiResponse<ReelComment>>(
+    const response = await axiosMusicClient.put<ApiResponse<ReelComment>>(
       `/reel-comments/${commentId}`,
       { content }
     );
@@ -136,7 +136,7 @@ export const reelsApi = {
 
   // Get user reels
   getUserReels: async (userId: number, page = 0, size = 10) => {
-    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
+    const response = await axiosMusicClient.get<ApiResponse<ReelFeedResponse>>(
       `/reels/user/${userId}?page=${page}&size=${size}`
     );
     return response.data.data;
@@ -144,7 +144,7 @@ export const reelsApi = {
 
   // Search reels
   searchReels: async (query: string, page = 0, size = 10) => {
-    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
+    const response = await axiosMusicClient.get<ApiResponse<ReelFeedResponse>>(
       `/reels/search?query=${query}&page=${page}&size=${size}`
     );
     return response.data.data;
@@ -152,7 +152,7 @@ export const reelsApi = {
 
   // Increment view count
   incrementViewCount: async (reelId: number) => {
-    const response = await axiosClient.post<ApiResponse<Reel>>(
+    const response = await axiosMusicClient.post<ApiResponse<Reel>>(
       `/reels/${reelId}/views`
     );
     return response.data.data;
@@ -160,7 +160,7 @@ export const reelsApi = {
 
   // Add comment reaction
   addCommentReaction: async (commentId: number, reactionType: ReactionType) => {
-    const response = await axiosClient.post<ApiResponse<ReelComment>>(
+    const response = await axiosMusicClient.post<ApiResponse<ReelComment>>(
       `/reel-comments/${commentId}/reactions?type=${reactionType}`
     );
     return response.data.data;
@@ -168,7 +168,7 @@ export const reelsApi = {
 
   // Remove comment reaction
   removeCommentReaction: async (commentId: number) => {
-    const response = await axiosClient.delete<ApiResponse<ReelComment>>(
+    const response = await axiosMusicClient.delete<ApiResponse<ReelComment>>(
       `/reel-comments/${commentId}/reactions`
     );
     return response.data.data;
@@ -176,7 +176,7 @@ export const reelsApi = {
 
   // Pin comment
   pinComment: async (commentId: number) => {
-    const response = await axiosClient.post<ApiResponse<ReelComment>>(
+    const response = await axiosMusicClient.post<ApiResponse<ReelComment>>(
       `/reel-comments/${commentId}/pin`
     );
     return response.data.data;
@@ -184,7 +184,7 @@ export const reelsApi = {
 
   // Unpin comment
   unpinComment: async (commentId: number) => {
-    const response = await axiosClient.post<ApiResponse<ReelComment>>(
+    const response = await axiosMusicClient.post<ApiResponse<ReelComment>>(
       `/reel-comments/${commentId}/unpin`
     );
     return response.data.data;
@@ -192,7 +192,7 @@ export const reelsApi = {
 
   // Get replies for a comment
   getCommentReplies: async (commentId: number, page = 0, size = 10) => {
-    const response = await axiosClient.get<ApiResponse<ReelCommentResponse>>(
+    const response = await axiosMusicClient.get<ApiResponse<ReelCommentResponse>>(
       `/reel-comments/${commentId}/replies?page=${page}&size=${size}`
     );
     return response.data.data;
@@ -200,28 +200,28 @@ export const reelsApi = {
 
   // Toggle save
   toggleSave: async (reelId: number) => {
-    const response = await axiosClient.post<ApiResponse<SaveResponse>>(
+    const response = await axiosMusicClient.post<ApiResponse<SaveResponse>>(
       `/reels/${reelId}/saves/toggle`
     );
     return response.data.data;
   },
 
   getUserLikedReels: async (page = 0, size = 20) => {
-    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
+    const response = await axiosMusicClient.get<ApiResponse<ReelFeedResponse>>(
       `/reels/me/likes?page=${page}&size=${size}`
     );
     return response.data.data;
   },
 
   getUserSavedReels: async (page = 0, size = 20) => {
-    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
+    const response = await axiosMusicClient.get<ApiResponse<ReelFeedResponse>>(
       `/reels/me/saved?page=${page}&size=${size}`
     );
     return response.data.data;
   },
 
   getUserViewedReels: async (page = 0, size = 20) => {
-    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
+    const response = await axiosMusicClient.get<ApiResponse<ReelFeedResponse>>(
       `/reels/me/views?page=${page}&size=${size}`
     );
     return response.data.data;
@@ -229,7 +229,7 @@ export const reelsApi = {
 
   // Get my created reels
   getMyCreatedReels: async (page = 0, size = 10) => {
-    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
+    const response = await axiosMusicClient.get<ApiResponse<ReelFeedResponse>>(
       `/reels/me/created?page=${page}&size=${size}`
     );
     return response.data.data;
@@ -237,7 +237,7 @@ export const reelsApi = {
 
   // Get search history
   getSearchHistory: async (page = 0, size = 20) => {
-    const response = await axiosClient.get<ApiResponse<SearchHistoryResponse>>(
+    const response = await axiosMusicClient.get<ApiResponse<SearchHistoryResponse>>(
       `/reels/me/search-history?page=${page}&size=${size}`
     );
     return response.data.data;
@@ -245,7 +245,7 @@ export const reelsApi = {
 
   // Delete search history item
   deleteSearchHistory: async (id: number) => {
-    const response = await axiosClient.delete<ApiResponse<void>>(
+    const response = await axiosMusicClient.delete<ApiResponse<void>>(
       `/reels/me/search-history/${id}`
     );
     return response.data;
@@ -253,7 +253,7 @@ export const reelsApi = {
 
   // Delete all search history
   deleteAllSearchHistory: async () => {
-    const response = await axiosClient.delete<ApiResponse<void>>(
+    const response = await axiosMusicClient.delete<ApiResponse<void>>(
       `/reels/me/search-history`
     );
     return response.data;
@@ -299,7 +299,7 @@ export const reelsApi = {
       params.append("to", to.trim());
     }
 
-    const response = await axiosClient.get<ApiResponse<AdminReelResponse>>(
+    const response = await axiosMusicClient.get<ApiResponse<AdminReelResponse>>(
       `/admin/reels?${params.toString()}`
     );
     return response.data.data;
@@ -307,7 +307,7 @@ export const reelsApi = {
 
   // Admin: Get reel detail by ID
   getAdminReelDetail: async (reelId: number) => {
-    const response = await axiosClient.get<ApiResponse<AdminReelDetail>>(
+    const response = await axiosMusicClient.get<ApiResponse<AdminReelDetail>>(
       `/admin/reels/${reelId}`
     );
     return response.data.data;
@@ -315,7 +315,7 @@ export const reelsApi = {
 
   // Admin: Hard delete reel
   hardDeleteAdminReel: async (reelId: number) => {
-    const response = await axiosClient.delete<ApiResponse<void>>(
+    const response = await axiosMusicClient.delete<ApiResponse<void>>(
       `/admin/reels/${reelId}/hard`
     );
     return response.data;
@@ -323,7 +323,7 @@ export const reelsApi = {
 
   // Admin: Hide reel (change status to HIDDEN)
   hideAdminReel: async (reelId: number, reason?: string) => {
-    const response = await axiosClient.patch<ApiResponse<HideReelResponse>>(
+    const response = await axiosMusicClient.patch<ApiResponse<HideReelResponse>>(
       `/admin/reels/${reelId}/hide`,
       { reason }
     );
@@ -332,7 +332,7 @@ export const reelsApi = {
 
   // Admin: Unhide reel (change status to ACTIVE)
   unhideAdminReel: async (reelId: number) => {
-    const response = await axiosClient.patch<ApiResponse<HideReelResponse>>(
+    const response = await axiosMusicClient.patch<ApiResponse<HideReelResponse>>(
       `/admin/reels/${reelId}/unhide`
     );
     return response.data.data;
