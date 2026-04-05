@@ -8,11 +8,12 @@ import AppLoader from "./components/custom/AppLoader";
 import { router } from "./router";
 import { persistor, store } from "./features/store";
 import { useAppDispatch, useAppSelector } from "./features/hooks";
-import { getCurrentUserSession, logout } from "./features/slices/authThunk";
+import { getCurrentUserSession } from "./features/slices/authThunk";
 import { setupAxiosInterceptors } from "./lib/axiosClient";
 import { setupAuthAxiosInterceptors } from "./lib/axiosAuthClient";
 import { setupMusicAxiosInterceptors } from "./lib/axiosMusicClient";
 import {
+  clearAuthState,
   setLogoutReason,
   updateUserSession,
 } from "./features/slices/authSlice";
@@ -41,8 +42,9 @@ function AppInner() {
       onTokenRefreshed: (payload: any) =>
         store.dispatch(updateUserSession(payload.userSession)),
       onLogout: () => {
+        localStorage.removeItem("access_token");
         store.dispatch(setLogoutReason("EXPIRED"));
-        store.dispatch(logout());
+        store.dispatch(clearAuthState());
       },
     };
 

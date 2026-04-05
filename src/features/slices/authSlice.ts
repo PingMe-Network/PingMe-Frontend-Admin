@@ -42,6 +42,12 @@ const authSlice = createSlice({
     ) {
       state.userSession = action.payload;
     },
+    clearAuthState(state) {
+      state.userSession = {} as CurrentUserSessionResponse;
+      state.isLogin = false;
+      state.isLoading = false;
+      state.error = null;
+    },
   },
 
   extraReducers: (builder) => {
@@ -107,8 +113,12 @@ const authSlice = createSlice({
 // ===========================================
 // EXPORT REDUCER
 // ===========================================
-export const { updateTokenManually, setLogoutReason, updateUserSession } =
-  authSlice.actions;
+export const {
+  updateTokenManually,
+  clearAuthState,
+  setLogoutReason,
+  updateUserSession,
+} = authSlice.actions;
 export default authSlice.reducer;
 
 // ===========================================
