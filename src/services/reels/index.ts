@@ -1,4 +1,4 @@
-import axiosClient from "@/lib/axiosClient";
+import axiosReelClient from "@/lib/axiosReelClient";
 import type {
   Reel,
   ReelFeedResponse,
@@ -20,16 +20,16 @@ import type { ApiResponse } from "@/types/base/apiResponse";
 export const reelsApi = {
   // Fetch reel feed with pagination
   getReelFeed: async (page = 0, size = 10) => {
-    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
-      `/reels/feed?page=${page}&size=${size}`
+    const response = await axiosReelClient.get<ApiResponse<ReelFeedResponse>>(
+      `/reel-service/reels/feed?page=${page}&size=${size}`
     );
     return response.data.data;
   },
 
   // Get reel details by ID
   getReelById: async (reelId: number) => {
-    const response = await axiosClient.get<ApiResponse<ReelDetailResponse>>(
-      `/reels/${reelId}`
+    const response = await axiosReelClient.get<ApiResponse<ReelDetailResponse>>(
+      `/reel-service/admin/reels/${reelId}`
     );
     return response.data.data;
   },
@@ -46,8 +46,8 @@ export const reelsApi = {
     );
     formData.append("video", data.video);
 
-    const response = await axiosClient.post<ApiResponse<Reel>>(
-      "/reels",
+    const response = await axiosReelClient.post<ApiResponse<Reel>>(
+      "/reel-service/reels",
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" },
@@ -74,8 +74,8 @@ export const reelsApi = {
       formData.append("video", data.video);
     }
 
-    const response = await axiosClient.put<ApiResponse<Reel>>(
-      `/reels/${reelId}`,
+    const response = await axiosReelClient.put<ApiResponse<Reel>>(
+      `/reel-service/reels/${reelId}`,
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" },
@@ -86,32 +86,32 @@ export const reelsApi = {
 
   // Delete reel
   deleteReel: async (reelId: number) => {
-    const response = await axiosClient.delete<ApiResponse<void>>(
-      `/reels/${reelId}`
+    const response = await axiosReelClient.delete<ApiResponse<void>>(
+      `/reel-service/reels/${reelId}`
     );
     return response.data;
   },
 
   // Toggle like
   toggleLike: async (reelId: number) => {
-    const response = await axiosClient.post<ApiResponse<Reel>>(
-      `/reels/${reelId}/likes/toggle`
+    const response = await axiosReelClient.post<ApiResponse<Reel>>(
+      `/reel-service/reels/${reelId}/likes/toggle`
     );
     return response.data.data;
   },
 
   // Get comments for reel
   getComments: async (reelId: number, page = 0, size = 20) => {
-    const response = await axiosClient.get<ApiResponse<ReelCommentResponse>>(
-      `/reel-comments/reels/${reelId}?page=${page}&size=${size}`
+    const response = await axiosReelClient.get<ApiResponse<ReelCommentResponse>>(
+      `/reel-service/comments/${reelId}?page=${page}&size=${size}`
     );
     return response.data.data;
   },
 
   // Create comment
   createComment: async (reelId: number, data: CreateCommentRequest) => {
-    const response = await axiosClient.post<ApiResponse<ReelComment>>(
-      `/reel-comments/reels/${reelId}`,
+    const response = await axiosReelClient.post<ApiResponse<ReelComment>>(
+      `/reel-service/comments/${reelId}`,
       data
     );
     return response.data.data;
@@ -119,142 +119,134 @@ export const reelsApi = {
 
   // Delete comment
   deleteComment: async (commentId: number) => {
-    const response = await axiosClient.delete<ApiResponse<void>>(
-      `/reel-comments/${commentId}`
+    const response = await axiosReelClient.delete<ApiResponse<void>>(
+      `/reel-service/comments/${commentId}`
     );
     return response.data;
   },
 
   // Update comment
   updateComment: async (commentId: number, content: string) => {
-    const response = await axiosClient.put<ApiResponse<ReelComment>>(
-      `/reel-comments/${commentId}`,
+    const response = await axiosReelClient.put<ApiResponse<ReelComment>>(
+      `/reel-service/comments/${commentId}`,
       { content }
-    );
-    return response.data.data;
-  },
-
-  // Get user reels
-  getUserReels: async (userId: number, page = 0, size = 10) => {
-    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
-      `/reels/user/${userId}?page=${page}&size=${size}`
     );
     return response.data.data;
   },
 
   // Search reels
   searchReels: async (query: string, page = 0, size = 10) => {
-    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
-      `/reels/search?query=${query}&page=${page}&size=${size}`
+    const response = await axiosReelClient.get<ApiResponse<ReelFeedResponse>>(
+      `/reel-service/reels/search?query=${query}&page=${page}&size=${size}`
     );
     return response.data.data;
   },
 
   // Increment view count
   incrementViewCount: async (reelId: number) => {
-    const response = await axiosClient.post<ApiResponse<Reel>>(
-      `/reels/${reelId}/views`
+    const response = await axiosReelClient.post<ApiResponse<Reel>>(
+      `/reel-service/reels/${reelId}/views`
     );
     return response.data.data;
   },
 
   // Add comment reaction
   addCommentReaction: async (commentId: number, reactionType: ReactionType) => {
-    const response = await axiosClient.post<ApiResponse<ReelComment>>(
-      `/reel-comments/${commentId}/reactions?type=${reactionType}`
+    const response = await axiosReelClient.post<ApiResponse<ReelComment>>(
+      `/reel-service/comments/${commentId}/reactions?type=${reactionType}`
     );
     return response.data.data;
   },
 
   // Remove comment reaction
   removeCommentReaction: async (commentId: number) => {
-    const response = await axiosClient.delete<ApiResponse<ReelComment>>(
-      `/reel-comments/${commentId}/reactions`
+    const response = await axiosReelClient.delete<ApiResponse<ReelComment>>(
+      `/reel-service/comments/${commentId}/reactions`
     );
     return response.data.data;
   },
 
   // Pin comment
   pinComment: async (commentId: number) => {
-    const response = await axiosClient.post<ApiResponse<ReelComment>>(
-      `/reel-comments/${commentId}/pin`
+    const response = await axiosReelClient.post<ApiResponse<ReelComment>>(
+      `/reel-service/comments/${commentId}/pin`
     );
     return response.data.data;
   },
 
   // Unpin comment
   unpinComment: async (commentId: number) => {
-    const response = await axiosClient.post<ApiResponse<ReelComment>>(
-      `/reel-comments/${commentId}/unpin`
+    const response = await axiosReelClient.post<ApiResponse<ReelComment>>(
+      `/reel-service/comments/${commentId}/unpin`
     );
     return response.data.data;
   },
 
   // Get replies for a comment
   getCommentReplies: async (commentId: number, page = 0, size = 10) => {
-    const response = await axiosClient.get<ApiResponse<ReelCommentResponse>>(
-      `/reel-comments/${commentId}/replies?page=${page}&size=${size}`
+    const response = await axiosReelClient.get<ApiResponse<ReelCommentResponse>>(
+      `/reel-service/comments/${commentId}/replies?page=${page}&size=${size}`
     );
     return response.data.data;
   },
 
   // Toggle save
   toggleSave: async (reelId: number) => {
-    const response = await axiosClient.post<ApiResponse<SaveResponse>>(
-      `/reels/${reelId}/saves/toggle`
+    const response = await axiosReelClient.post<ApiResponse<SaveResponse>>(
+      `/reel-service/reels/${reelId}/saves/toggle`
     );
     return response.data.data;
   },
 
   getUserLikedReels: async (page = 0, size = 20) => {
-    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
-      `/reels/me/likes?page=${page}&size=${size}`
+    const response = await axiosReelClient.get<ApiResponse<ReelFeedResponse>>(
+      `/reel-service/reels/me/likes?page=${page}&size=${size}`
     );
     return response.data.data;
   },
 
   getUserSavedReels: async (page = 0, size = 20) => {
-    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
-      `/reels/me/saved?page=${page}&size=${size}`
+    const response = await axiosReelClient.get<ApiResponse<ReelFeedResponse>>(
+      `/reel-service/reels/me/saved?page=${page}&size=${size}`
     );
     return response.data.data;
   },
 
   getUserViewedReels: async (page = 0, size = 20) => {
-    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
-      `/reels/me/views?page=${page}&size=${size}`
+    const response = await axiosReelClient.get<ApiResponse<ReelFeedResponse>>(
+      `/reel-service/reels/me/views?page=${page}&size=${size}`
     );
     return response.data.data;
   },
 
   // Get my created reels
   getMyCreatedReels: async (page = 0, size = 10) => {
-    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
-      `/reels/me/created?page=${page}&size=${size}`
+    const response = await axiosReelClient.get<ApiResponse<ReelFeedResponse>>(
+      `/reel-service/reels/me/created?page=${page}&size=${size}`
     );
     return response.data.data;
   },
 
   // Get search history
   getSearchHistory: async (page = 0, size = 20) => {
-    const response = await axiosClient.get<ApiResponse<SearchHistoryResponse>>(
-      `/reels/me/search-history?page=${page}&size=${size}`
+    const response = await axiosReelClient.get<ApiResponse<SearchHistoryResponse>>(
+      `/reel-service/reels/me/search-history?page=${page}&size=${size}`
     );
     return response.data.data;
   },
 
   // Delete search history item
   deleteSearchHistory: async (id: number) => {
-    const response = await axiosClient.delete<ApiResponse<void>>(
-      `/reels/me/search-history/${id}`
+    const response = await axiosReelClient.delete<ApiResponse<void>>(
+      `/reel-service/reels/me/search-history/${id}`
     );
     return response.data;
   },
 
   // Delete all search history
   deleteAllSearchHistory: async () => {
-    const response = await axiosClient.delete<ApiResponse<void>>(
-      `/reels/me/search-history`
+    const response = await axiosReelClient.delete<ApiResponse<void>>(
+      `/reel-service/reels/me/search-history`
     );
     return response.data;
   },
@@ -299,32 +291,32 @@ export const reelsApi = {
       params.append("to", to.trim());
     }
 
-    const response = await axiosClient.get<ApiResponse<AdminReelResponse>>(
-      `/admin/reels?${params.toString()}`
+    const response = await axiosReelClient.get<ApiResponse<AdminReelResponse>>(
+      `/reel-service/admin/reels?${params.toString()}`
     );
     return response.data.data;
   },
 
   // Admin: Get reel detail by ID
   getAdminReelDetail: async (reelId: number) => {
-    const response = await axiosClient.get<ApiResponse<AdminReelDetail>>(
-      `/admin/reels/${reelId}`
+    const response = await axiosReelClient.get<ApiResponse<AdminReelDetail>>(
+      `/reel-service/admin/reels/${reelId}`
     );
     return response.data.data;
   },
 
   // Admin: Hard delete reel
   hardDeleteAdminReel: async (reelId: number) => {
-    const response = await axiosClient.delete<ApiResponse<void>>(
-      `/admin/reels/${reelId}/hard`
+    const response = await axiosReelClient.delete<ApiResponse<void>>(
+      `/reel-service/admin/reels/${reelId}/hard`
     );
     return response.data;
   },
 
   // Admin: Hide reel (change status to HIDDEN)
   hideAdminReel: async (reelId: number, reason?: string) => {
-    const response = await axiosClient.patch<ApiResponse<HideReelResponse>>(
-      `/admin/reels/${reelId}/hide`,
+    const response = await axiosReelClient.patch<ApiResponse<HideReelResponse>>(
+      `/reel-service/admin/reels/${reelId}/hide`,
       { reason }
     );
     return response.data.data;
@@ -332,8 +324,18 @@ export const reelsApi = {
 
   // Admin: Unhide reel (change status to ACTIVE)
   unhideAdminReel: async (reelId: number) => {
-    const response = await axiosClient.patch<ApiResponse<HideReelResponse>>(
-      `/admin/reels/${reelId}/unhide`
+    const response = await axiosReelClient.patch<ApiResponse<HideReelResponse>>(
+      `/reel-service/admin/reels/${reelId}/unhide`
+    );
+    return response.data.data;
+  },
+
+
+  //LƯU Ý: API DƯỚI ĐÂY "CÓ VẺ" LÀ VÔ DỤNG
+  // Get user reels
+  getUserReels: async (userId: number, page = 0, size = 10) => {
+    const response = await axiosReelClient.get<ApiResponse<ReelFeedResponse>>(
+      `/reels/user/${userId}?page=${page}&size=${size}`
     );
     return response.data.data;
   },
