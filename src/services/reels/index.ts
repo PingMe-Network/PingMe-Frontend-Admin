@@ -1,4 +1,4 @@
-import axiosReelClient from "@/lib/axiosReelClient";
+import axiosClient from "@/lib/axiosClient";
 import type {
   Reel,
   ReelFeedResponse,
@@ -20,7 +20,7 @@ import type { ApiResponse } from "@/types/base/apiResponse";
 export const reelsApi = {
   // Fetch reel feed with pagination
   getReelFeed: async (page = 0, size = 10) => {
-    const response = await axiosReelClient.get<ApiResponse<ReelFeedResponse>>(
+    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
       `/reel-service/reels/feed?page=${page}&size=${size}`
     );
     return response.data.data;
@@ -28,7 +28,7 @@ export const reelsApi = {
 
   // Get reel details by ID
   getReelById: async (reelId: number) => {
-    const response = await axiosReelClient.get<ApiResponse<ReelDetailResponse>>(
+    const response = await axiosClient.get<ApiResponse<ReelDetailResponse>>(
       `/reel-service/admin/reels/${reelId}`
     );
     return response.data.data;
@@ -46,7 +46,7 @@ export const reelsApi = {
     );
     formData.append("video", data.video);
 
-    const response = await axiosReelClient.post<ApiResponse<Reel>>(
+    const response = await axiosClient.post<ApiResponse<Reel>>(
       "/reel-service/reels",
       formData,
       {
@@ -74,7 +74,7 @@ export const reelsApi = {
       formData.append("video", data.video);
     }
 
-    const response = await axiosReelClient.put<ApiResponse<Reel>>(
+    const response = await axiosClient.put<ApiResponse<Reel>>(
       `/reel-service/reels/${reelId}`,
       formData,
       {
@@ -86,7 +86,7 @@ export const reelsApi = {
 
   // Delete reel
   deleteReel: async (reelId: number) => {
-    const response = await axiosReelClient.delete<ApiResponse<void>>(
+    const response = await axiosClient.delete<ApiResponse<void>>(
       `/reel-service/reels/${reelId}`
     );
     return response.data;
@@ -94,7 +94,7 @@ export const reelsApi = {
 
   // Toggle like
   toggleLike: async (reelId: number) => {
-    const response = await axiosReelClient.post<ApiResponse<Reel>>(
+    const response = await axiosClient.post<ApiResponse<Reel>>(
       `/reel-service/reels/${reelId}/likes/toggle`
     );
     return response.data.data;
@@ -102,7 +102,7 @@ export const reelsApi = {
 
   // Get comments for reel
   getComments: async (reelId: number, page = 0, size = 20) => {
-    const response = await axiosReelClient.get<ApiResponse<ReelCommentResponse>>(
+    const response = await axiosClient.get<ApiResponse<ReelCommentResponse>>(
       `/reel-service/comments/${reelId}?page=${page}&size=${size}`
     );
     return response.data.data;
@@ -110,7 +110,7 @@ export const reelsApi = {
 
   // Create comment
   createComment: async (reelId: number, data: CreateCommentRequest) => {
-    const response = await axiosReelClient.post<ApiResponse<ReelComment>>(
+    const response = await axiosClient.post<ApiResponse<ReelComment>>(
       `/reel-service/comments/${reelId}`,
       data
     );
@@ -119,7 +119,7 @@ export const reelsApi = {
 
   // Delete comment
   deleteComment: async (commentId: number) => {
-    const response = await axiosReelClient.delete<ApiResponse<void>>(
+    const response = await axiosClient.delete<ApiResponse<void>>(
       `/reel-service/comments/${commentId}`
     );
     return response.data;
@@ -127,7 +127,7 @@ export const reelsApi = {
 
   // Update comment
   updateComment: async (commentId: number, content: string) => {
-    const response = await axiosReelClient.put<ApiResponse<ReelComment>>(
+    const response = await axiosClient.put<ApiResponse<ReelComment>>(
       `/reel-service/comments/${commentId}`,
       { content }
     );
@@ -136,7 +136,7 @@ export const reelsApi = {
 
   // Search reels
   searchReels: async (query: string, page = 0, size = 10) => {
-    const response = await axiosReelClient.get<ApiResponse<ReelFeedResponse>>(
+    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
       `/reel-service/reels/search?query=${query}&page=${page}&size=${size}`
     );
     return response.data.data;
@@ -144,7 +144,7 @@ export const reelsApi = {
 
   // Increment view count
   incrementViewCount: async (reelId: number) => {
-    const response = await axiosReelClient.post<ApiResponse<Reel>>(
+    const response = await axiosClient.post<ApiResponse<Reel>>(
       `/reel-service/reels/${reelId}/views`
     );
     return response.data.data;
@@ -152,7 +152,7 @@ export const reelsApi = {
 
   // Add comment reaction
   addCommentReaction: async (commentId: number, reactionType: ReactionType) => {
-    const response = await axiosReelClient.post<ApiResponse<ReelComment>>(
+    const response = await axiosClient.post<ApiResponse<ReelComment>>(
       `/reel-service/comments/${commentId}/reactions?type=${reactionType}`
     );
     return response.data.data;
@@ -160,7 +160,7 @@ export const reelsApi = {
 
   // Remove comment reaction
   removeCommentReaction: async (commentId: number) => {
-    const response = await axiosReelClient.delete<ApiResponse<ReelComment>>(
+    const response = await axiosClient.delete<ApiResponse<ReelComment>>(
       `/reel-service/comments/${commentId}/reactions`
     );
     return response.data.data;
@@ -168,7 +168,7 @@ export const reelsApi = {
 
   // Pin comment
   pinComment: async (commentId: number) => {
-    const response = await axiosReelClient.post<ApiResponse<ReelComment>>(
+    const response = await axiosClient.post<ApiResponse<ReelComment>>(
       `/reel-service/comments/${commentId}/pin`
     );
     return response.data.data;
@@ -176,7 +176,7 @@ export const reelsApi = {
 
   // Unpin comment
   unpinComment: async (commentId: number) => {
-    const response = await axiosReelClient.post<ApiResponse<ReelComment>>(
+    const response = await axiosClient.post<ApiResponse<ReelComment>>(
       `/reel-service/comments/${commentId}/unpin`
     );
     return response.data.data;
@@ -184,7 +184,7 @@ export const reelsApi = {
 
   // Get replies for a comment
   getCommentReplies: async (commentId: number, page = 0, size = 10) => {
-    const response = await axiosReelClient.get<ApiResponse<ReelCommentResponse>>(
+    const response = await axiosClient.get<ApiResponse<ReelCommentResponse>>(
       `/reel-service/comments/${commentId}/replies?page=${page}&size=${size}`
     );
     return response.data.data;
@@ -192,28 +192,28 @@ export const reelsApi = {
 
   // Toggle save
   toggleSave: async (reelId: number) => {
-    const response = await axiosReelClient.post<ApiResponse<SaveResponse>>(
+    const response = await axiosClient.post<ApiResponse<SaveResponse>>(
       `/reel-service/reels/${reelId}/saves/toggle`
     );
     return response.data.data;
   },
 
   getUserLikedReels: async (page = 0, size = 20) => {
-    const response = await axiosReelClient.get<ApiResponse<ReelFeedResponse>>(
+    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
       `/reel-service/reels/me/likes?page=${page}&size=${size}`
     );
     return response.data.data;
   },
 
   getUserSavedReels: async (page = 0, size = 20) => {
-    const response = await axiosReelClient.get<ApiResponse<ReelFeedResponse>>(
+    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
       `/reel-service/reels/me/saved?page=${page}&size=${size}`
     );
     return response.data.data;
   },
 
   getUserViewedReels: async (page = 0, size = 20) => {
-    const response = await axiosReelClient.get<ApiResponse<ReelFeedResponse>>(
+    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
       `/reel-service/reels/me/views?page=${page}&size=${size}`
     );
     return response.data.data;
@@ -221,7 +221,7 @@ export const reelsApi = {
 
   // Get my created reels
   getMyCreatedReels: async (page = 0, size = 10) => {
-    const response = await axiosReelClient.get<ApiResponse<ReelFeedResponse>>(
+    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
       `/reel-service/reels/me/created?page=${page}&size=${size}`
     );
     return response.data.data;
@@ -229,7 +229,7 @@ export const reelsApi = {
 
   // Get search history
   getSearchHistory: async (page = 0, size = 20) => {
-    const response = await axiosReelClient.get<ApiResponse<SearchHistoryResponse>>(
+    const response = await axiosClient.get<ApiResponse<SearchHistoryResponse>>(
       `/reel-service/reels/me/search-history?page=${page}&size=${size}`
     );
     return response.data.data;
@@ -237,7 +237,7 @@ export const reelsApi = {
 
   // Delete search history item
   deleteSearchHistory: async (id: number) => {
-    const response = await axiosReelClient.delete<ApiResponse<void>>(
+    const response = await axiosClient.delete<ApiResponse<void>>(
       `/reel-service/reels/me/search-history/${id}`
     );
     return response.data;
@@ -245,7 +245,7 @@ export const reelsApi = {
 
   // Delete all search history
   deleteAllSearchHistory: async () => {
-    const response = await axiosReelClient.delete<ApiResponse<void>>(
+    const response = await axiosClient.delete<ApiResponse<void>>(
       `/reel-service/reels/me/search-history`
     );
     return response.data;
@@ -291,7 +291,7 @@ export const reelsApi = {
       params.append("to", to.trim());
     }
 
-    const response = await axiosReelClient.get<ApiResponse<AdminReelResponse>>(
+    const response = await axiosClient.get<ApiResponse<AdminReelResponse>>(
       `/reel-service/admin/reels?${params.toString()}`
     );
     return response.data.data;
@@ -299,7 +299,7 @@ export const reelsApi = {
 
   // Admin: Get reel detail by ID
   getAdminReelDetail: async (reelId: number) => {
-    const response = await axiosReelClient.get<ApiResponse<AdminReelDetail>>(
+    const response = await axiosClient.get<ApiResponse<AdminReelDetail>>(
       `/reel-service/admin/reels/${reelId}`
     );
     return response.data.data;
@@ -307,7 +307,7 @@ export const reelsApi = {
 
   // Admin: Hard delete reel
   hardDeleteAdminReel: async (reelId: number) => {
-    const response = await axiosReelClient.delete<ApiResponse<void>>(
+    const response = await axiosClient.delete<ApiResponse<void>>(
       `/reel-service/admin/reels/${reelId}/hard`
     );
     return response.data;
@@ -315,7 +315,7 @@ export const reelsApi = {
 
   // Admin: Hide reel (change status to HIDDEN)
   hideAdminReel: async (reelId: number, reason?: string) => {
-    const response = await axiosReelClient.patch<ApiResponse<HideReelResponse>>(
+    const response = await axiosClient.patch<ApiResponse<HideReelResponse>>(
       `/reel-service/admin/reels/${reelId}/hide`,
       { reason }
     );
@@ -324,7 +324,7 @@ export const reelsApi = {
 
   // Admin: Unhide reel (change status to ACTIVE)
   unhideAdminReel: async (reelId: number) => {
-    const response = await axiosReelClient.patch<ApiResponse<HideReelResponse>>(
+    const response = await axiosClient.patch<ApiResponse<HideReelResponse>>(
       `/reel-service/admin/reels/${reelId}/unhide`
     );
     return response.data.data;
@@ -334,7 +334,7 @@ export const reelsApi = {
   //LƯU Ý: API DƯỚI ĐÂY "CÓ VẺ" LÀ VÔ DỤNG
   // Get user reels
   getUserReels: async (userId: number, page = 0, size = 10) => {
-    const response = await axiosReelClient.get<ApiResponse<ReelFeedResponse>>(
+    const response = await axiosClient.get<ApiResponse<ReelFeedResponse>>(
       `/reels/user/${userId}?page=${page}&size=${size}`
     );
     return response.data.data;

@@ -1,4 +1,4 @@
-import axiosAuthClient from "@/lib/axiosAuthClient";
+import axiosClient from "@/lib/axiosClient";
 import type {
   ApiResponse,
   PageResponse,
@@ -16,7 +16,7 @@ export interface UserPaginationParams extends PaginationParams {
 }
 
 export const getAllUsers = (params: UserPaginationParams) => {
-  return axiosAuthClient.get<ApiResponse<PageResponse<UserSummaryResponse>>>(
+  return axiosClient.get<ApiResponse<PageResponse<UserSummaryResponse>>>(
     "/auth-service/users",
     {
       params: {
@@ -31,7 +31,7 @@ export const getAllUsers = (params: UserPaginationParams) => {
 };
 
 export const updateAccountStatus = (id: number, status: AccountStatusType) => {
-  return axiosAuthClient.post(`/auth-service/users/${id}`, {
+  return axiosClient.post(`/auth-service/users/${id}`, {
     accountStatus: status,
   });
 };

@@ -1,4 +1,4 @@
-import axiosMusicClient from "@/lib/axiosMusicClient";
+import axiosClient from "@/lib/axiosClient";
 import type { ApiResponse, PageResponse } from "@/types/base/apiResponse";
 import type { ArtistResponse, ArtistRequest } from "@/types/music";
 import { createFormDataForArtist } from "./helpers/formDataHelper";
@@ -18,7 +18,7 @@ export const artistCrudService = {
     sortBy: string = "name",
     sortDir: string = "ASC",
   ): Promise<PageResponse<ArtistResponse>> => {
-    const response = await axiosMusicClient.get<
+    const response = await axiosClient.get<
       ApiResponse<PageResponse<ArtistResponse>>
     >(`${BASE_URL}/artists/all`, {
       params: { page, size, sortBy, sortDir },
@@ -30,7 +30,7 @@ export const artistCrudService = {
    * Get artist by ID
    */
   getById: async (id: number): Promise<ArtistResponse> => {
-    const response = await axiosMusicClient.get<ApiResponse<ArtistResponse>>(
+    const response = await axiosClient.get<ApiResponse<ArtistResponse>>(
       `${BASE_URL}/artists/${id}`,
     );
     return response.data.data;
@@ -42,7 +42,7 @@ export const artistCrudService = {
   search: async (
     name: string,
   ): Promise<ApiResponse<PageResponse<ArtistResponse>>> => {
-    const response = await axiosMusicClient.get<
+    const response = await axiosClient.get<
       ApiResponse<PageResponse<ArtistResponse>>
     >(`${BASE_URL}/artists/search`, {
       params: { name },
@@ -55,7 +55,7 @@ export const artistCrudService = {
    */
   create: async (data: ArtistRequest): Promise<ArtistResponse> => {
     const formData = createFormDataForArtist(data);
-    const response = await axiosMusicClient.post<ApiResponse<ArtistResponse>>(
+    const response = await axiosClient.post<ApiResponse<ArtistResponse>>(
       `${BASE_URL}/artists/save`,
       formData,
       {
@@ -73,7 +73,7 @@ export const artistCrudService = {
     data: Partial<ArtistRequest>,
   ): Promise<ArtistResponse> => {
     const formData = createFormDataForArtist(data);
-    const response = await axiosMusicClient.put<ApiResponse<ArtistResponse>>(
+    const response = await axiosClient.put<ApiResponse<ArtistResponse>>(
       `${BASE_URL}/artists/update/${id}`,
       formData,
       {
@@ -87,7 +87,7 @@ export const artistCrudService = {
    * Soft delete artist
    */
   softDelete: async (id: number): Promise<void> => {
-    await axiosMusicClient.delete<ApiResponse<void>>(
+    await axiosClient.delete<ApiResponse<void>>(
       `${BASE_URL}/artists/soft-delete/${id}`,
     );
   },
@@ -96,7 +96,7 @@ export const artistCrudService = {
    * Hard delete artist
    */
   hardDelete: async (id: number): Promise<void> => {
-    await axiosMusicClient.delete<ApiResponse<void>>(
+    await axiosClient.delete<ApiResponse<void>>(
       `${BASE_URL}/artists/hard-delete/${id}`,
     );
   },
@@ -105,7 +105,7 @@ export const artistCrudService = {
    * Restore deleted artist
    */
   restore: async (id: number): Promise<void> => {
-    await axiosMusicClient.put<ApiResponse<void>>(
+    await axiosClient.put<ApiResponse<void>>(
       `${BASE_URL}/artists/restore/${id}`,
     );
   },

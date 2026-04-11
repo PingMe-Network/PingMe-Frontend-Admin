@@ -1,4 +1,4 @@
-import axiosAuthClient from "@/lib/axiosAuthClient";
+import axiosClient from "@/lib/axiosClient";
 import type { ApiResponse } from "@/types/base/apiResponse";
 import type {
   AdminLoginResponse,
@@ -10,7 +10,7 @@ import { getSessionMetaRequest } from "@/utils/sessionMetaHandler";
 
 // 1. REGISTER
 export const registerLocalApi = (data: RegisterRequest) => {
-  return axiosAuthClient.post<ApiResponse<DefaultAuthResponse>>(
+  return axiosClient.post<ApiResponse<DefaultAuthResponse>>(
     "/auth-service/auth/register",
     data,
   );
@@ -19,7 +19,7 @@ export const registerLocalApi = (data: RegisterRequest) => {
 // LOGIN
 export const loginLocalApi = (data: LoginRequest) => {
   data.submitSessionMetaRequest = getSessionMetaRequest();
-  return axiosAuthClient.post<ApiResponse<AdminLoginResponse>>(
+  return axiosClient.post<ApiResponse<AdminLoginResponse>>(
     "/auth-service/auth/admin/login",
     data,
   );
@@ -27,5 +27,5 @@ export const loginLocalApi = (data: LoginRequest) => {
 
 // LOGOUT
 export const logoutApi = () => {
-  return axiosAuthClient.post("/auth-service/auth/logout");
+  return axiosClient.post("/auth-service/auth/logout");
 };

@@ -10,8 +10,6 @@ import { persistor, store } from "./features/store";
 import { useAppDispatch, useAppSelector } from "./features/hooks";
 import { getCurrentUserSession } from "./features/slices/authThunk";
 import { setupAxiosInterceptors } from "./lib/axiosClient";
-import { setupAuthAxiosInterceptors } from "./lib/axiosAuthClient";
-import { setupMusicAxiosInterceptors } from "./lib/axiosMusicClient";
 import {
   clearAuthState,
   setLogoutReason,
@@ -49,8 +47,6 @@ function AppInner() {
     };
 
     setupAxiosInterceptors(opts);
-    setupAuthAxiosInterceptors(opts);
-    setupMusicAxiosInterceptors(opts);
   }, []);
 
   return (
