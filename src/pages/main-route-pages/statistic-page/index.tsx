@@ -1,188 +1,168 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, FileText, CheckCircle, TrendingUp } from "lucide-react";
+import { useState, useEffect } from "react";
 
-const stats = [
-  {
-    title: "Tổng người dùng",
-    value: "1,234",
-    change: "+12%",
-    icon: Users,
-    color: "text-blue-600",
-    bgColor: "bg-blue-50",
-  },
-  {
-    title: "Tổng bài viết",
-    value: "456",
-    change: "+8%",
-    icon: FileText,
-    color: "text-blue-600",
-    bgColor: "bg-blue-50",
-  },
-  {
-    title: "Bài viết đã duyệt",
-    value: "389",
-    change: "+15%",
-    icon: CheckCircle,
-    color: "text-green-600",
-    bgColor: "bg-green-50",
-  },
-  {
-    title: "Tăng trưởng",
-    value: "23%",
-    change: "+5%",
-    icon: TrendingUp,
-    color: "text-orange-600",
-    bgColor: "bg-orange-50",
-  },
-];
+import {
+  getAuthCount,
+  getAuthTrend,
+  getAuthRecent,
+  getChatCount,
+  getChatTrend,
+  getChatRecent,
+  getMusicCount,
+  getMusicTrend,
+  getMusicRecent,
+} from "@/services/admin/statisticsApi";
+
+import type {
+  DailyTrendResponse,
+  RecentActivityLog,
+} from "@/services/admin/statisticsApi";
+import FilterBar from "./components/FilterBar";
+import KpiCards from "./components/KpiCards";
+import TrendSection from "./components/TrendSection";
+import TopRanking from "./components/TopRanking";
 
 export default function StatisticsManagementPage() {
+  // --- States ---
+  const [counts, setCounts] = useState({ auth: 0, chat: 0, music: 0 });
+  const [activeTab, setActiveTab] = useState<"auth" | "chat" | "music">("auth");
+  const [trendData, setTrendData] = useState<DailyTrendResponse[]>([]);
+  const [recentLogs, setRecentLogs] = useState<RecentActivityLog[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // --- STATE CHO BỘ LỌC THỜI GIAN ---
+  const [timeRange, setTimeRange] = useState("7days"); // '7days', '30days', 'custom'
+  const [customStart, setCustomStart] = useState("");
+  const [customEnd, setCustomEnd] = useState("");
+
+  // State này lưu Epoch Time thực tế sẽ gửi xuống API
+  const [filterEpoch, setFilterEpoch] = useState<{
+    start?: number;
+    end?: number;
+  }>({});
+
+  // --- Fetch KPI Counts ---
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const [authRes, chatRes, musicRes] = await Promise.all([
+          getAuthCount(filterEpoch.start, filterEpoch.end),
+          getChatCount(filterEpoch.start, filterEpoch.end),
+          getMusicCount(filterEpoch.start, filterEpoch.end),
+        ]);
+        setCounts({
+          auth: authRes.data,
+          chat: chatRes.data,
+          music: musicRes.data,
+        });
+      } catch (error) {
+        console.error("Lỗi lấy dữ liệu đếm tổng:", error);
+      }
+    };
+    fetchCounts();
+  }, [filterEpoch]); // <--- Thêm filterEpoch vào đây
+
+  // --- Fetch Trend & Recent based on Active Tab ---
+  useEffect(() => {
+    const fetchTabSpecificData = async () => {
+      setIsLoading(true);
+      try {
+        let trendRes, recentRes;
+
+        if (activeTab === "auth") {
+          trendRes = await getAuthTrend(filterEpoch.start, filterEpoch.end);
+          recentRes = await getAuthRecent(
+            0,
+            10,
+            filterEpoch.start,
+            filterEpoch.end,
+          );
+        } else if (activeTab === "chat") {
+          trendRes = await getChatTrend(filterEpoch.start, filterEpoch.end);
+          recentRes = await getChatRecent(
+            0,
+            10,
+            filterEpoch.start,
+            filterEpoch.end,
+          );
+        } else {
+          trendRes = await getMusicTrend(filterEpoch.start, filterEpoch.end);
+          recentRes = await getMusicRecent(
+            0,
+            10,
+            filterEpoch.start,
+            filterEpoch.end,
+          );
+        }
+
+        setTrendData(trendRes.data);
+        setRecentLogs(recentRes.data.content);
+      } catch (error) {
+        console.error("Lỗi lấy dữ liệu chi tiết:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchTabSpecificData();
+  }, [activeTab, filterEpoch]); // <--- Thêm filterEpoch vào đây
+
+  const handleApplyFilter = () => {
+    const now = new Date();
+    let startMs, endMs;
+
+    if (timeRange === "7days") {
+      startMs = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).getTime();
+      endMs = now.getTime();
+    } else if (timeRange === "30days") {
+      startMs = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).getTime();
+      endMs = now.getTime();
+    } else if (timeRange === "custom") {
+      if (!customStart || !customEnd) {
+        alert("Vui lòng chọn đầy đủ ngày bắt đầu và ngày kết thúc!");
+        return;
+      }
+      startMs = new Date(customStart).getTime();
+      // Set endMs đến 23:59:59 của ngày kết thúc để lấy trọn vẹn ngày đó
+      endMs = new Date(customEnd).setHours(23, 59, 59, 999);
+    }
+
+    // Cập nhật state để trigger useEffect gọi lại API
+    setFilterEpoch({ start: startMs, end: endMs });
+  };
+
   return (
-    <div className="flex-1 overflow-auto">
-      
-
-      {/* Content */}
+    <div className="flex-1 overflow-auto bg-gray-50/50">
       <div className="p-8">
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat) => {
-            const Icon = stat.icon;
-            return (
-              <Card
-                key={stat.title}
-                className="border-blue-100 hover:shadow-lg transition-shadow"
-              >
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-600">
-                    {stat.title}
-                  </CardTitle>
-                  <div className={`p-2 rounded-lg ${stat.bgColor}`}>
-                    <Icon className={`w-5 h-5 ${stat.color}`} />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-gray-900">
-                    {stat.value}
-                  </div>
-                  <p className="text-xs text-green-600 mt-1">
-                    {stat.change} so với tháng trước
-                  </p>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">
+          Tổng quan hệ thống
+        </h1>
 
-        {/* Additional Stats */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className="border-blue-100">
-            <CardHeader>
-              <CardTitle className="text-blue-900">
-                Hoạt động gần đây
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                  <div>
-                    <p className="font-medium text-gray-900">Người dùng mới</p>
-                    <p className="text-sm text-gray-500">Hôm nay</p>
-                  </div>
-                  <span className="text-lg font-semibold text-gray-900">
-                    +24
-                  </span>
-                </div>
-                <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                  <div>
-                    <p className="font-medium text-gray-900">Bài viết mới</p>
-                    <p className="text-sm text-gray-500">Hôm nay</p>
-                  </div>
-                  <span className="text-lg font-semibold text-gray-900">
-                    +12
-                  </span>
-                </div>
-                <div className="flex items-center justify-between py-3">
-                  <div>
-                    <p className="font-medium text-gray-900">
-                      Bài viết chờ duyệt
-                    </p>
-                    <p className="text-sm text-gray-500">Hiện tại</p>
-                  </div>
-                  <span className="text-lg font-semibold text-yellow-600">
-                    8
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        <FilterBar
+          timeRange={timeRange}
+          setTimeRange={setTimeRange}
+          customStart={customStart}
+          setCustomStart={setCustomStart}
+          customEnd={customEnd}
+          setCustomEnd={setCustomEnd}
+          onApplyFilter={handleApplyFilter}
+        />
 
-          <Card className="border-blue-100">
-            <CardHeader>
-              <CardTitle className="text-blue-900">
-                Danh mục phổ biến
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-700">Công nghệ</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-blue-600 rounded-full"
-                        style={{ width: "75%" }}
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-gray-900">
-                      75%
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-700">Lối sống</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-blue-600 rounded-full"
-                        style={{ width: "60%" }}
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-gray-900">
-                      60%
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-700">Kinh doanh</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-blue-600 rounded-full"
-                        style={{ width: "45%" }}
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-gray-900">
-                      45%
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-700">Du lịch</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-blue-600 rounded-full"
-                        style={{ width: "30%" }}
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-gray-900">
-                      30%
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        <KpiCards counts={counts} />
+
+        <TrendSection
+          isLoading={isLoading}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          trendData={trendData}
+          recentLogs={recentLogs}
+        />
+
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="xl:col-span-1">
+            <TopRanking activeTab={activeTab} />
+          </div>
+          <div className="xl:col-span-2">
+            {/* Chỗ này để trống cho tính năng khác sau này, hoặc bạn có thể kéo dài Chart xuống */}
+          </div>
         </div>
       </div>
     </div>
