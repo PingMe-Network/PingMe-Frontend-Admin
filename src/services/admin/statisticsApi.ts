@@ -81,3 +81,27 @@ export const getMusicRecent = (
     `/api/admin/music-stats/recent`,
     { params: { page, size, start, end } },
   );
+
+// --- Top Rankings ---
+export interface TopUserResponse {
+  userId: number;
+  userName: string | null;
+  messageCount: number;
+}
+
+export interface TopSongResponse {
+  songId: number;
+  songTitle: string | null;
+  artistName: string | null;
+  playCount: number;
+}
+
+export const getTopChatUsers = (start?: number, end?: number, limit = 5) =>
+  axiosClient.get<TopUserResponse[]>("/api/admin/chat-stats/top-users", {
+    params: { start, end, limit },
+  });
+
+export const getTopMusicSongs = (start?: number, end?: number, limit = 5) =>
+  axiosClient.get<TopSongResponse[]>("/api/admin/music-stats/top-songs", {
+    params: { start, end, limit },
+  });
