@@ -1,5 +1,7 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, Medal, Award } from "lucide-react";
+import { Trophy, Medal, Flame } from "lucide-react";
+import { getTopChatUsers, getTopMusicSongs } from "@/services/admin/statisticsApi";
 
 interface TopItem {
   id: string;
@@ -10,112 +12,131 @@ interface TopItem {
 
 interface TopRankingProps {
   activeTab: "auth" | "chat" | "music";
+  filterEpoch?: { start?: number; end?: number };
 }
 
-export default function TopRanking({ activeTab }: TopRankingProps) {
-  // TẠM THỜI: Dùng Mock Data. Sau này bạn sẽ truyền data này từ API vào.
-  const getRankingData = (): { title: string; items: TopItem[] } => {
-    if (activeTab === "music") {
-      return {
-        title: "Top 5 Bài hát thịnh hành",
-        items: [
-          {
-            id: "1",
-            name: "Có Chắc Yêu Là Đây",
-            subText: "Sơn Tùng M-TP",
-            score: 1245,
-          },
-          { id: "2", name: "Chìm Sâu", subText: "MCK", score: 980 },
-          {
-            id: "3",
-            name: "Nơi Này Có Anh",
-            subText: "Sơn Tùng M-TP",
-            score: 856,
-          },
-          { id: "4", name: "Waiting For You", subText: "MONO", score: 720 },
-          { id: "5", name: "Ngủ Một Mình", subText: "HIEUTHUHAI", score: 650 },
-        ],
-      };
-    }
-    if (activeTab === "chat") {
-      return {
-        title: "Top 5 Thành viên năng nổ",
-        items: [
-          {
-            id: "1",
-            name: "Nguyễn Văn Phát",
-            subText: "ID: user_8932",
-            score: 450,
-          },
-          { id: "2", name: "Trần Hải", subText: "ID: user_1024", score: 382 },
-          { id: "3", name: "Lê Khiêm", subText: "ID: user_5521", score: 310 },
-          { id: "4", name: "Anna Tran", subText: "ID: user_9921", score: 285 },
-          { id: "5", name: "Hoàng Minh", subText: "ID: user_4412", score: 190 },
-        ],
-      };
-    }
-    return {
-      title: "Top 5 Khu vực đăng ký mới",
-      items: [
-        { id: "1", name: "Hồ Chí Minh", subText: "Việt Nam", score: 320 },
-        { id: "2", name: "Hà Nội", subText: "Việt Nam", score: 280 },
-        { id: "3", name: "Đà Nẵng", subText: "Việt Nam", score: 150 },
-        { id: "4", name: "Cần Thơ", subText: "Việt Nam", score: 90 },
-        { id: "5", name: "Hải Phòng", subText: "Việt Nam", score: 65 },
-      ],
-    };
-  };
+export default function TopRanking({ activeTab, filterEpoch }: TopRankingProps) {
+  const [data, setData] = useState<{ title: string; items: TopItem[] }>({ title: "", items: [] });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const data = getRankingData();
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        if (activeTab === "music") {
+          const res = await getTopMusicSongs(filterEpoch?.start, filterEpoch?.end, 5);
+          const items = res.data.map((song: any) => ({
+            id: String(song.songId),
+            name: song.songTitle || `Bài hát #${song.songId}`,
+            subText: song.artistName || "Không rõ ca sĩ",
+            score: song.playCount,
+          }));
+          setData({ title: "Top 5 Bài hát thịnh hành", items });
+        } else if (activeTab === "chat") {
+          const res = await getTopChatUsers(filterEpoch?.start, filterEpoch?.end, 5);
+          const items = res.data.map((user: any) => ({
+            id: String(user.userId),
+            name: user.userName || `Thành viên #${user.userId}`,
+            subText: `ID: user_${user.userId}`,
+            score: user.messageCount,
+          }));
+          setData({ title: "Top 5 Thành viên năng nổ", items });
+        } else {
+          // Mock data for Auth
+          setData({
+            title: "Top 5 Khu vực đăng ký mới",
+            items: [
+              { id: "1", name: "Hồ Chí Minh", subText: "Việt Nam", score: 320 },
+              { id: "2", name: "Hà Nội", subText: "Việt Nam", score: 280 },
+              { id: "3", name: "Đà Nẵng", subText: "Việt Nam", score: 150 },
+              { id: "4", name: "Cần Thơ", subText: "Việt Nam", score: 90 },
+              { id: "5", name: "Hải Phòng", subText: "Việt Nam", score: 65 },
+            ],
+          });
+        }
+      } catch (error) {
+        console.error("Lỗi lấy dữ liệu Top Ranking:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [activeTab, filterEpoch]);
+
+  const maxScore = data.items.length > 0 ? Math.max(...data.items.map(item => item.score)) : 1;
 
   // Đổi màu icon cho Top 1, 2, 3
   const getRankIcon = (index: number) => {
-    if (index === 0) return <Trophy className="w-5 h-5 text-yellow-500" />;
-    if (index === 1) return <Medal className="w-5 h-5 text-gray-400" />;
-    if (index === 2) return <Medal className="w-5 h-5 text-amber-600" />;
-    return <Award className="w-5 h-5 text-blue-200" />;
+    if (index === 0) return <Trophy className="w-5 h-5 text-yellow-500 drop-shadow-md" />;
+    if (index === 1) return <Medal className="w-5 h-5 text-slate-400 drop-shadow-md" />;
+    if (index === 2) return <Medal className="w-5 h-5 text-amber-600 drop-shadow-md" />;
+    return <span className="text-sm font-bold text-gray-400">#{index + 1}</span>;
+  };
+
+  const getRankBg = (index: number) => {
+    if (index === 0) return "bg-gradient-to-r from-yellow-50 to-transparent border-l-4 border-yellow-400";
+    if (index === 1) return "bg-gradient-to-r from-slate-50 to-transparent border-l-4 border-slate-300";
+    if (index === 2) return "bg-gradient-to-r from-amber-50 to-transparent border-l-4 border-amber-500";
+    return "hover:bg-gray-50 border-l-4 border-transparent";
+  };
+
+  const getProgressBarColor = () => {
+    if (activeTab === "auth") return "bg-blue-200/50";
+    if (activeTab === "chat") return "bg-indigo-200/50";
+    return "bg-emerald-200/50";
   };
 
   return (
-    <Card className="shadow-sm border-gray-100 flex flex-col h-full bg-gradient-to-br from-white to-gray-50/50">
-      <CardHeader className="border-b pb-4">
-        <CardTitle className="text-lg flex items-center gap-2">
-          <Trophy className="w-5 h-5 text-yellow-500" />
+    <Card className="shadow-sm border-none flex flex-col h-full bg-white rounded-2xl overflow-hidden">
+      <CardHeader className="border-b border-gray-50 pb-4">
+        <CardTitle className="text-lg font-bold text-gray-800 flex items-center gap-2">
+          <div className="p-2 bg-orange-50 rounded-lg">
+            <Flame className="w-5 h-5 text-orange-500" />
+          </div>
           {data.title}
         </CardTitle>
       </CardHeader>
       <CardContent className="p-4 flex-1">
-        <div className="space-y-4">
-          {data.items.map((item, index) => (
-            <div
-              key={item.id}
-              className="flex items-center justify-between p-3 rounded-lg hover:bg-white hover:shadow-sm transition-all border border-transparent hover:border-gray-100"
-            >
-              <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100/50 font-bold text-gray-600">
-                  {getRankIcon(index)}
+        <div className="space-y-3">
+          {data.items.map((item, index) => {
+             const percentage = Math.round((item.score / maxScore) * 100);
+             return (
+              <div
+                key={item.id}
+                className={`relative overflow-hidden flex items-center justify-between p-3 rounded-xl transition-all group ${getRankBg(index)}`}
+              >
+                {/* Progress Bar Background */}
+                <div 
+                  className={`absolute left-0 top-0 bottom-0 ${getProgressBarColor()} opacity-30 rounded-r-xl transition-all duration-1000 ease-out`}
+                  style={{ width: `${percentage}%` }}
+                ></div>
+
+                <div className="flex items-center gap-4 relative z-10">
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${index < 3 ? 'bg-white shadow-sm' : ''}`}>
+                    {getRankIcon(index)}
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-800 text-sm group-hover:text-blue-600 transition-colors">
+                      {item.name}
+                    </p>
+                    <p className="text-[11px] text-gray-500 font-medium">{item.subText}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-semibold text-gray-900 text-sm">
-                    {item.name}
+                <div className="text-right relative z-10">
+                  <p className="text-lg font-extrabold text-gray-800">
+                    {item.score.toLocaleString()}
                   </p>
-                  <p className="text-xs text-gray-500">{item.subText}</p>
+                  <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">
+                    {activeTab === "music"
+                      ? "Lượt nghe"
+                      : activeTab === "chat"
+                        ? "Tin nhắn"
+                        : "Tài khoản"}
+                  </p>
                 </div>
               </div>
-              <div className="text-right">
-                <p className="text-lg font-bold text-blue-600">
-                  {item.score.toLocaleString()}
-                </p>
-                <p className="text-[10px] text-gray-400 uppercase font-semibold">
-                  {activeTab === "music"
-                    ? "Lượt nghe"
-                    : activeTab === "chat"
-                      ? "Tin nhắn"
-                      : "Tài khoản"}
-                </p>
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </CardContent>
     </Card>
