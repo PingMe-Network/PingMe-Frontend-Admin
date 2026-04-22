@@ -97,47 +97,54 @@ export default function TopRanking({ activeTab, filterEpoch }: TopRankingProps) 
         </CardTitle>
       </CardHeader>
       <CardContent className="p-4 flex-1">
-        <div className="space-y-3">
-          {data.items.map((item, index) => {
-             const percentage = Math.round((item.score / maxScore) * 100);
-             return (
-              <div
-                key={item.id}
-                className={`relative overflow-hidden flex items-center justify-between p-3 rounded-xl transition-all group ${getRankBg(index)}`}
-              >
-                {/* Progress Bar Background */}
-                <div 
-                  className={`absolute left-0 top-0 bottom-0 ${getProgressBarColor()} opacity-30 rounded-r-xl transition-all duration-1000 ease-out`}
-                  style={{ width: `${percentage}%` }}
-                ></div>
+        {isLoading ? (
+          <div className="flex flex-col justify-center items-center h-full min-h-[200px] gap-2">
+            <div className="w-6 h-6 border-2 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
+            <p className="text-sm text-gray-400">Đang tải...</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {data.items.map((item, index) => {
+               const percentage = Math.round((item.score / maxScore) * 100);
+               return (
+                <div
+                  key={item.id}
+                  className={`relative overflow-hidden flex items-center justify-between p-3 rounded-xl transition-all group ${getRankBg(index)}`}
+                >
+                  {/* Progress Bar Background */}
+                  <div 
+                    className={`absolute left-0 top-0 bottom-0 ${getProgressBarColor()} opacity-30 rounded-r-xl transition-all duration-1000 ease-out`}
+                    style={{ width: `${percentage}%` }}
+                  ></div>
 
-                <div className="flex items-center gap-4 relative z-10">
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${index < 3 ? 'bg-white shadow-sm' : ''}`}>
-                    {getRankIcon(index)}
+                  <div className="flex items-center gap-4 relative z-10">
+                    <div className={`flex items-center justify-center w-8 h-8 rounded-full ${index < 3 ? 'bg-white shadow-sm' : ''}`}>
+                      {getRankIcon(index)}
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-800 text-sm group-hover:text-blue-600 transition-colors">
+                        {item.name}
+                      </p>
+                      <p className="text-[11px] text-gray-500 font-medium">{item.subText}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-bold text-gray-800 text-sm group-hover:text-blue-600 transition-colors">
-                      {item.name}
+                  <div className="text-right relative z-10">
+                    <p className="text-lg font-extrabold text-gray-800">
+                      {item.score.toLocaleString()}
                     </p>
-                    <p className="text-[11px] text-gray-500 font-medium">{item.subText}</p>
+                    <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">
+                      {activeTab === "music"
+                        ? "Lượt nghe"
+                        : activeTab === "chat"
+                          ? "Tin nhắn"
+                          : "Tài khoản"}
+                    </p>
                   </div>
                 </div>
-                <div className="text-right relative z-10">
-                  <p className="text-lg font-extrabold text-gray-800">
-                    {item.score.toLocaleString()}
-                  </p>
-                  <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">
-                    {activeTab === "music"
-                      ? "Lượt nghe"
-                      : activeTab === "chat"
-                        ? "Tin nhắn"
-                        : "Tài khoản"}
-                  </p>
-                </div>
-              </div>
-            )
-          })}
-        </div>
+              )
+            })}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
